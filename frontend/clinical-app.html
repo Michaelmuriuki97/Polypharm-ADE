@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0d1228" />
+    <title>Polypharm ADE · Clinical App</title>
+
+    <style>
+      .back-home {
+        position: fixed;
+        top: 16px;
+        right: 20px;
+        z-index: 1000;
+        padding: 10px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 12px;
+        background: #17213b;
+        color: #fff;
+        font: 600 14px/1.2 system-ui, sans-serif;
+        text-decoration: none;
+      }
+
+      .back-home:hover {
+        background: #253657;
+      }
+
+      @media (max-width: 600px) {
+        .back-home {
+          top: 10px;
+          right: 10px;
+          padding: 8px 12px;
+          font-size: 13px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <a class="back-home" href="%BASE_URL%./index.html">← Back</a>
+
+    <div id="root"></div>
+
+    <script type="module" src="%BASE_URL%./src/main.jsx"></script>
+  </body>
+</html>

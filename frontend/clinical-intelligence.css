@@ -1,0 +1,1675 @@
+/* =====================================================
+   POLYPHARM ADE
+   CLINICAL INTELLIGENCE UI
+===================================================== */
+
+:root {
+
+  --ci-purple: #2a0f76;
+  --ci-purple-light: #7657d9;
+  --ci-purple-dark: #10052d;
+
+  --ci-accent: #f59e0b;
+
+  --ci-red: #dc2626;
+  --ci-orange: #ea580c;
+  --ci-green: #16a34a;
+  --ci-blue: #2563eb;
+
+  --ci-text: #1e293b;
+  --ci-muted: #64748b;
+
+  --ci-glass:
+    rgba(255,255,255,0.66);
+
+  --ci-glass-dark:
+    rgba(255,255,255,0.09);
+
+  --ci-border:
+    rgba(255,255,255,0.75);
+
+  --ci-shadow:
+    0 25px 70px rgba(42,15,118,0.10);
+
+}
+
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+body {
+
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(42,15,118,0.12),
+      transparent 30%
+    ),
+
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(118,87,217,0.10),
+      transparent 30%
+    ),
+
+    #f5f7fb;
+
+}
+
+
+/* =====================================================
+   BACKGROUND ORBS
+===================================================== */
+
+.ci-background {
+
+  position: fixed;
+
+  inset: 0;
+
+  overflow: hidden;
+
+  pointer-events: none;
+
+  z-index: -1;
+
+}
+
+
+.ci-orb {
+
+  position: absolute;
+
+  border-radius: 50%;
+
+  filter: blur(80px);
+
+  opacity: 0.35;
+
+  animation:
+    ciOrbFloat 12s infinite alternate ease-in-out;
+
+}
+
+
+.orb-one {
+
+  width: 350px;
+  height: 350px;
+
+  background:
+    rgba(42,15,118,0.25);
+
+  top: 10%;
+  left: -100px;
+
+}
+
+
+.orb-two {
+
+  width: 300px;
+  height: 300px;
+
+  background:
+    rgba(118,87,217,0.25);
+
+  right: -80px;
+  top: 35%;
+
+  animation-delay: 3s;
+
+}
+
+
+.orb-three {
+
+  width: 280px;
+  height: 280px;
+
+  background:
+    rgba(245,158,11,0.12);
+
+  left: 35%;
+  bottom: -100px;
+
+  animation-delay: 5s;
+
+}
+
+
+@keyframes ciOrbFloat {
+
+  0% {
+
+    transform:
+      translate(0,0)
+      scale(1);
+
+  }
+
+  100% {
+
+    transform:
+      translate(80px,-50px)
+      scale(1.2);
+
+  }
+
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.ci-header {
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 100;
+
+  padding: 12px 20px;
+
+  background:
+    rgba(19,6,56,0.78);
+
+  border-bottom:
+    1px solid rgba(255,255,255,0.12);
+
+  backdrop-filter:
+    blur(25px)
+    saturate(160%);
+
+}
+
+
+.ci-header-inner {
+
+  max-width: 1200px;
+
+  margin: auto;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+}
+
+
+.ci-brand {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  color: white;
+
+  text-decoration: none;
+
+}
+
+
+.ci-brand-logo {
+
+  width: 45px;
+  height: 45px;
+
+  overflow: hidden;
+
+  border-radius: 13px;
+
+  border:
+    1px solid rgba(255,255,255,0.25);
+
+}
+
+
+.ci-brand-logo img {
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+}
+
+
+.ci-brand strong {
+
+  display: block;
+
+  font-size: 0.95rem;
+
+}
+
+
+.ci-brand span {
+
+  display: block;
+
+  font-size: 0.7rem;
+
+  opacity: 0.6;
+
+}
+
+
+.ci-back {
+
+  padding: 10px 16px;
+
+  border-radius: 12px;
+
+  color: white;
+
+  text-decoration: none;
+
+  background:
+    rgba(255,255,255,0.09);
+
+  border:
+    1px solid rgba(255,255,255,0.16);
+
+  backdrop-filter:
+    blur(15px);
+
+  transition: 0.3s ease;
+
+}
+
+
+.ci-back:hover {
+
+  background:
+    rgba(255,255,255,0.17);
+
+  transform:
+    translateY(-2px);
+
+}
+
+
+/* =====================================================
+   APPLICATION
+===================================================== */
+
+.clinical-app {
+
+  max-width: 1200px;
+
+  margin: auto;
+
+  padding:
+    80px 20px;
+
+}
+
+
+/* =====================================================
+   INTRO
+===================================================== */
+
+.ci-intro {
+
+  text-align: center;
+
+  max-width: 850px;
+
+  margin:
+    0 auto 60px;
+
+}
+
+
+.ci-status {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding:
+    8px 15px;
+
+  border-radius: 50px;
+
+  background:
+    rgba(42,15,118,0.08);
+
+  border:
+    1px solid rgba(42,15,118,0.12);
+
+  color:
+    var(--ci-purple);
+
+  font-size: 0.7rem;
+
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+
+}
+
+
+.ci-status-dot {
+
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background:
+    var(--ci-green);
+
+  box-shadow:
+    0 0 12px
+    rgba(22,163,74,0.6);
+
+}
+
+
+.ci-intro h1 {
+
+  margin-top: 20px;
+
+  font-size:
+    clamp(2.4rem,5vw,4.5rem);
+
+  line-height: 1.05;
+
+  color:
+    var(--ci-purple-dark);
+
+  letter-spacing:
+    -2px;
+
+}
+
+
+.ci-intro h1 span {
+
+  display: block;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--ci-purple),
+      #7657d9,
+      var(--ci-purple)
+    );
+
+  background-size:
+    200% auto;
+
+  color: transparent;
+
+  background-clip: text;
+
+  -webkit-background-clip: text;
+
+  animation:
+    ciGradient 5s linear infinite;
+
+}
+
+
+@keyframes ciGradient {
+
+  to {
+
+    background-position:
+      200% center;
+
+  }
+
+}
+
+
+.ci-intro p {
+
+  margin:
+    25px auto 0;
+
+  max-width: 700px;
+
+  color:
+    var(--ci-muted);
+
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+.ci-dashboard {
+
+  display: grid;
+
+  gap: 25px;
+
+}
+
+
+/* =====================================================
+   GLASS CARD
+===================================================== */
+
+.ci-card {
+
+  background:
+    var(--ci-glass);
+
+  border:
+    1px solid var(--ci-border);
+
+  border-radius: 26px;
+
+  box-shadow:
+    var(--ci-shadow);
+
+  backdrop-filter:
+    blur(25px)
+    saturate(140%);
+
+  -webkit-backdrop-filter:
+    blur(25px)
+    saturate(140%);
+
+}
+
+
+.ci-card-header {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+}
+
+
+.ci-card-header h2 {
+
+  color:
+    var(--ci-purple);
+
+  font-size: 1.35rem;
+
+}
+
+
+.ci-label {
+
+  display: block;
+
+  margin-bottom: 5px;
+
+  color:
+    var(--ci-purple-light);
+
+  font-size: 0.68rem;
+
+  font-weight: 800;
+
+  letter-spacing: 1.7px;
+
+}
+
+
+.ci-icon {
+
+  width: 45px;
+  height: 45px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background:
+    rgba(42,15,118,0.08);
+
+}
+
+
+/* =====================================================
+   PATIENT
+===================================================== */
+
+.patient-card,
+.medication-card,
+.alerts-card,
+.summary-card,
+.rules-card {
+
+  padding: 30px;
+
+}
+
+
+.form-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap: 15px;
+
+  margin-top: 25px;
+
+}
+
+
+.form-group label {
+
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 0.75rem;
+
+  font-weight: 700;
+
+  color:
+    var(--ci-muted);
+
+}
+
+
+.form-group input,
+.form-group select,
+.medication-input-row input {
+
+  width: 100%;
+
+  padding:
+    13px 14px;
+
+  border:
+    1px solid rgba(42,15,118,0.12);
+
+  border-radius: 13px;
+
+  outline: none;
+
+  background:
+    rgba(255,255,255,0.65);
+
+  color:
+    var(--ci-text);
+
+  font-size: 0.9rem;
+
+  transition:
+    0.25s ease;
+
+}
+
+
+.form-group input:focus,
+.form-group select:focus,
+.medication-input-row input:focus {
+
+  border-color:
+    var(--ci-purple-light);
+
+  box-shadow:
+    0 0 0 4px
+    rgba(118,87,217,0.10);
+
+}
+
+
+.clinical-note {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  margin-top: 20px;
+
+  padding: 13px;
+
+  border-radius: 13px;
+
+  background:
+    rgba(37,99,235,0.06);
+
+  color:
+    #475569;
+
+  font-size: 0.75rem;
+
+}
+
+
+.clinical-note span {
+
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    var(--ci-blue);
+
+  color: white;
+
+  font-weight: bold;
+
+}
+
+
+/* =====================================================
+   MEDICATIONS
+===================================================== */
+
+.card-description {
+
+  color:
+    var(--ci-muted);
+
+  margin-top: 5px;
+
+}
+
+
+.medication-input-row {
+
+  display: flex;
+
+  gap: 10px;
+
+  margin-top: 20px;
+
+}
+
+
+.add-medication-btn {
+
+  border: none;
+
+  padding:
+    0 20px;
+
+  border-radius: 13px;
+
+  background:
+    var(--ci-purple);
+
+  color: white;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    0.25s ease;
+
+}
+
+
+.add-medication-btn:hover {
+
+  background:
+    var(--ci-purple-light);
+
+  transform:
+    translateY(-2px);
+
+}
+
+
+.medication-list {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  margin-top: 20px;
+
+}
+
+
+.empty-medications {
+
+  width: 100%;
+
+  padding: 20px;
+
+  text-align: center;
+
+  color:
+    var(--ci-muted);
+
+  border:
+    1px dashed
+    rgba(42,15,118,0.18);
+
+  border-radius: 14px;
+
+}
+
+
+.medication-chip {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding:
+    10px 12px;
+
+  border-radius: 14px;
+
+  background:
+    rgba(42,15,118,0.07);
+
+  border:
+    1px solid
+    rgba(42,15,118,0.10);
+
+  color:
+    var(--ci-purple);
+
+  font-weight: 600;
+
+  font-size: 0.8rem;
+
+}
+
+
+.remove-medication {
+
+  width: 22px;
+  height: 22px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background:
+    rgba(220,38,38,0.10);
+
+  color:
+    var(--ci-red);
+
+  cursor: pointer;
+
+}
+
+
+.medication-counter {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-top: 20px;
+
+  padding-top: 15px;
+
+  border-top:
+    1px solid rgba(42,15,118,0.08);
+
+  color:
+    var(--ci-muted);
+
+}
+
+
+.medication-counter strong {
+
+  color:
+    var(--ci-purple);
+
+}
+
+
+/* =====================================================
+   ANALYSIS CONTROL
+===================================================== */
+
+.analysis-control {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 30px;
+
+  padding: 30px;
+
+  border-radius: 26px;
+
+  color: white;
+
+  background:
+
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(118,87,217,0.45),
+      transparent 35%
+    ),
+
+    linear-gradient(
+      135deg,
+      #130638,
+      #2a0f76
+    );
+
+  box-shadow:
+    0 25px 70px
+    rgba(42,15,118,0.25);
+
+}
+
+
+.analysis-control h2 {
+
+  margin: 4px 0;
+
+}
+
+
+.analysis-control p {
+
+  opacity: 0.65;
+
+  font-size: 0.85rem;
+
+}
+
+
+.analyze-button {
+
+  min-height: 55px;
+
+  padding:
+    0 24px;
+
+  border: none;
+
+  border-radius: 15px;
+
+  background:
+    white;
+
+  color:
+    var(--ci-purple);
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition:
+    0.3s ease;
+
+}
+
+
+.analyze-button:hover {
+
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    0 15px 35px
+    rgba(0,0,0,0.25);
+
+}
+
+
+.analyze-icon {
+
+  margin-right: 7px;
+
+}
+
+
+/* =====================================================
+   RISK OVERVIEW
+===================================================== */
+
+.risk-overview {
+
+  display: grid;
+
+  grid-template-columns:
+    1.5fr repeat(3,1fr);
+
+  gap: 15px;
+
+}
+
+
+.risk-score-card {
+
+  padding: 25px;
+
+}
+
+
+.risk-score {
+
+  font-size: 3rem;
+
+  font-weight: 900;
+
+  color:
+    var(--ci-purple);
+
+}
+
+
+.risk-level {
+
+  display: inline-block;
+
+  padding:
+    5px 10px;
+
+  border-radius: 30px;
+
+  background:
+    rgba(42,15,118,0.08);
+
+  font-size: 0.75rem;
+
+  font-weight: 800;
+
+}
+
+
+.metric-card {
+
+  padding: 25px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 5px;
+
+}
+
+
+.metric-card > span:not(.metric-icon) {
+
+  font-size: 0.75rem;
+
+  color:
+    var(--ci-muted);
+
+}
+
+
+.metric-card strong {
+
+  font-size: 2rem;
+
+  color:
+    var(--ci-purple);
+
+}
+
+
+.metric-icon {
+
+  font-size: 1.3rem;
+
+}
+
+
+/* =====================================================
+   ALERTS
+===================================================== */
+
+.alert-count {
+
+  min-width: 38px;
+  height: 38px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    rgba(220,38,38,0.10);
+
+  color:
+    var(--ci-red);
+
+  font-weight: 900;
+
+}
+
+
+.alerts-container {
+
+  display: grid;
+
+  gap: 12px;
+
+  margin-top: 25px;
+
+}
+
+
+.no-analysis {
+
+  text-align: center;
+
+  padding: 40px 20px;
+
+  color:
+    var(--ci-muted);
+
+}
+
+
+.no-analysis > div {
+
+  font-size: 2.5rem;
+
+  margin-bottom: 10px;
+
+}
+
+
+.no-analysis h3 {
+
+  color:
+    var(--ci-purple);
+
+}
+
+
+.alert {
+
+  display: grid;
+
+  grid-template-columns:
+    auto 1fr auto;
+
+  gap: 15px;
+
+  align-items: center;
+
+  padding: 18px;
+
+  border-radius: 17px;
+
+  border:
+    1px solid transparent;
+
+  animation:
+    alertAppear 0.4s ease;
+
+}
+
+
+@keyframes alertAppear {
+
+  from {
+
+    opacity: 0;
+
+    transform:
+      translateY(10px);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateY(0);
+
+  }
+
+}
+
+
+.alert.high {
+
+  background:
+    rgba(220,38,38,0.07);
+
+  border-color:
+    rgba(220,38,38,0.15);
+
+}
+
+
+.alert.moderate {
+
+  background:
+    rgba(234,88,12,0.07);
+
+  border-color:
+    rgba(234,88,12,0.15);
+
+}
+
+
+.alert.low {
+
+  background:
+    rgba(22,163,74,0.07);
+
+  border-color:
+    rgba(22,163,74,0.15);
+
+}
+
+
+.alert-icon {
+
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+}
+
+
+.high .alert-icon {
+
+  background:
+    rgba(220,38,38,0.12);
+
+}
+
+
+.moderate .alert-icon {
+
+  background:
+    rgba(234,88,12,0.12);
+
+}
+
+
+.low .alert-icon {
+
+  background:
+    rgba(22,163,74,0.12);
+
+}
+
+
+.alert h3 {
+
+  font-size: 0.95rem;
+
+  margin-bottom: 3px;
+
+}
+
+
+.alert p {
+
+  color:
+    var(--ci-muted);
+
+  font-size: 0.78rem;
+
+}
+
+
+.alert-severity {
+
+  font-size: 0.65rem;
+
+  font-weight: 900;
+
+  letter-spacing: 1px;
+
+}
+
+
+.high .alert-severity {
+
+  color:
+    var(--ci-red);
+
+}
+
+
+.moderate .alert-severity {
+
+  color:
+    var(--ci-orange);
+
+}
+
+
+.low .alert-severity {
+
+  color:
+    var(--ci-green);
+
+}
+
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
+.analysis-summary {
+
+  margin-top: 20px;
+
+  padding: 20px;
+
+  border-radius: 16px;
+
+  background:
+    rgba(42,15,118,0.05);
+
+  color:
+    var(--ci-muted);
+
+  line-height: 1.8;
+
+}
+
+
+/* =====================================================
+   RULES
+===================================================== */
+
+.rules-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2,1fr);
+
+  gap: 12px;
+
+  margin-top: 25px;
+
+}
+
+
+.rule-item {
+
+  display: grid;
+
+  grid-template-columns:
+    auto 1fr auto;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 16px;
+
+  border-radius: 15px;
+
+  background:
+    rgba(255,255,255,0.45);
+
+  border:
+    1px solid
+    rgba(42,15,118,0.08);
+
+}
+
+
+.rule-item > span {
+
+  font-size: 1.4rem;
+
+}
+
+
+.rule-item strong {
+
+  display: block;
+
+  color:
+    var(--ci-purple);
+
+}
+
+
+.rule-item small {
+
+  display: block;
+
+  color:
+    var(--ci-muted);
+
+  font-size: 0.7rem;
+
+}
+
+
+.rule-item b {
+
+  color:
+    var(--ci-green);
+
+  font-size: 0.6rem;
+
+}
+
+
+/* =====================================================
+   DISCLAIMER
+===================================================== */
+
+.ci-disclaimer {
+
+  max-width: 900px;
+
+  margin:
+    40px auto;
+
+  padding: 20px;
+
+  border-radius: 18px;
+
+  background:
+    rgba(245,158,11,0.08);
+
+  border:
+    1px solid
+    rgba(245,158,11,0.18);
+
+  color:
+    #78350f;
+
+  font-size: 0.75rem;
+
+}
+
+
+.ci-disclaimer strong {
+
+  display: block;
+
+  margin-bottom: 5px;
+
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.ci-footer {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 35px 20px;
+
+  color: white;
+
+  background:
+    #10052d;
+
+}
+
+
+.ci-footer img {
+
+  width: 50px;
+  height: 50px;
+
+  border-radius: 13px;
+
+}
+
+
+.ci-footer strong {
+
+  display: block;
+
+}
+
+
+.ci-footer span {
+
+  display: block;
+
+  font-size: 0.7rem;
+
+  opacity: 0.5;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .form-grid {
+
+    grid-template-columns:
+      repeat(2,1fr);
+
+  }
+
+
+  .risk-overview {
+
+    grid-template-columns:
+      repeat(2,1fr);
+
+  }
+
+
+  .risk-score-card {
+
+    grid-column:
+      span 2;
+
+  }
+
+
+  .analysis-control {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+  }
+
+
+  .analyze-button {
+
+    width: 100%;
+
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .clinical-app {
+
+    padding:
+      55px 14px;
+
+  }
+
+
+  .ci-header {
+
+    padding:
+      10px 14px;
+
+  }
+
+
+  .ci-brand span {
+
+    display: none;
+
+  }
+
+
+  .ci-back {
+
+    font-size: 0.75rem;
+
+  }
+
+
+  .form-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+  .patient-card,
+  .medication-card,
+  .alerts-card,
+  .summary-card,
+  .rules-card {
+
+    padding: 20px;
+
+  }
+
+
+  .medication-input-row {
+
+    flex-direction: column;
+
+  }
+
+
+  .add-medication-btn {
+
+    min-height: 48px;
+
+  }
+
+
+  .risk-overview {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+  .risk-score-card {
+
+    grid-column:
+      span 1;
+
+  }
+
+
+  .rules-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+  .alert {
+
+    grid-template-columns:
+      auto 1fr;
+
+  }
+
+
+  .alert-severity {
+
+    grid-column:
+      2;
+
+  }
+
+
+  .ci-footer {
+
+    flex-direction: column;
+
+    text-align: center;
+
+  }
+
+}
+
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+
+    animation-duration:
+      0.01ms !important;
+
+    animation-iteration-count:
+      1 !important;
+
+    transition-duration:
+      0.01ms !important;
+
+  }
+
+}
