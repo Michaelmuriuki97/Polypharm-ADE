@@ -13,6 +13,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         website: resolve(frontendDir, 'index.html'),
+        creator: resolve(frontendDir, 'creator.html'),
         clinicalApp: resolve(frontendDir, 'clinical-app.html'),
       },
     },
