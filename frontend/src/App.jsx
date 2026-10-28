@@ -255,6 +255,19 @@ function formatSectionName(name) {
     .join(' ');
 }
 
+function summarizeLabelText(text, limit = 420) {
+  const normalized = String(text || '').replace(/\s+/g, ' ').trim();
+  if (normalized.length <= limit) return normalized;
+  const excerpt = normalized.slice(0, limit);
+  const sentenceEnd = Math.max(
+    excerpt.lastIndexOf('. '),
+    excerpt.lastIndexOf('; '),
+    excerpt.lastIndexOf('! '),
+    excerpt.lastIndexOf('? ')
+  );
+  return `${excerpt.slice(0, sentenceEnd > limit * 0.55 ? sentenceEnd + 1 : limit).trim()}…`;
+}
+
 function Workspace({ user }) {
   const [input, setInput] = useState('');
   const [medications, setMedications] = useState([]);
@@ -365,7 +378,8 @@ function Workspace({ user }) {
       <section className="panel">
         <h2>Medicine list</h2>
         <p>
-          Look up available FDA drug-label sections. The brief mention check
+          Look up an FDA label summary first, then open the full label details.
+          The brief mention check
           looks for entered medicine names in retrieved Drug Interactions text.
         </p>
 
@@ -428,7 +442,34 @@ function Workspace({ user }) {
 
         {report && (
           <>
-            <h3>{report.summary}</h3>
+            <article className="finding">
+              <h3>Lookup summary</h3>
+              <p>{report.summary}</p>
+              <p>
+                <b>Possible interaction mentions:</b>{' '}
+                {report.interactionSummary?.message ||
+                  'No interaction summary was returned.'}
+              </p>
+              {interactionMentions.length > 0 && (
+                <ul>
+                  {interactionMentions.map((mention, index) => (
+                    <li
+                      key={`summary-${mention.labelMedicine}-${mention.mentionedMedicine}-${index}`}
+                    >
+                      The {mention.labelMedicine} label mentions{' '}
+                      {mention.mentionedMedicine}.
+                      {mention.excerpt && <blockquote>{mention.excerpt}</blockquote>}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <p>
+                This is a text lookup, not a safety assessment. No detected
+                mention does not mean the medicines are safe to take together.
+                Ask a pharmacist or prescriber to verify the results.
+              </p>
+            </article>
+
             {labelResults.length === 0 && (
               <p>
                 No FDA label results were returned. This does not mean the
@@ -452,6 +493,11 @@ function Workspace({ user }) {
 
               return matches.map((label, index) => {
                 const sections = Object.entries(label.sections || {});
+                const summarySection =
+                  label.sections?.drug_interactions ||
+                  label.sections?.warnings ||
+                  label.sections?.contraindications ||
+                  label.sections?.precautions;
                 return (
                   <article
                     className="finding"
@@ -472,18 +518,30 @@ function Workspace({ user }) {
                       </p>
                     )}
 
-                    {sections.length ? (
-                      sections.map(([sectionName, text]) => (
-                        <div key={sectionName}>
-                          <h4>{formatSectionName(sectionName)}</h4>
-                          <p className="label-text">{text}</p>
-                        </div>
-                      ))
+                    {summarySection ? (
+                      <div>
+                        <h4>FDA label summary</h4>
+                        <p className="label-text">
+                          {summarizeLabelText(summarySection)}
+                        </p>
+                      </div>
                     ) : (
                       <p>
                         This label result did not contain the selected warning
                         or interaction sections.
                       </p>
+                    )}
+
+                    {sections.length > 0 && (
+                      <details className="label-details">
+                        <summary>More information (full FDA label details)</summary>
+                        {sections.map(([sectionName, text]) => (
+                          <div key={sectionName}>
+                            <h4>{formatSectionName(sectionName)}</h4>
+                            <p className="label-text">{text}</p>
+                          </div>
+                        ))}
+                      </details>
                     )}
 
                     {label.sourceUrl && (
@@ -501,57 +559,12 @@ function Workspace({ user }) {
               });
             })}
 
-            <article className="finding">
-              <h3>SUMMARY</h3>
-              <p>
-                <b>Label mentions found:</b>{' '}
-                {possiblePairCount > 0
-                  ? `${mentionedPairCount} of ${possiblePairCount} medicine pairs (${mentionPercentage}%).`
-                  : 'A percentage cannot be calculated because fewer than two medicines were entered.'}
-              </p>
-              <p>
-                <b>Possible interaction mentions:</b>{' '}
-                {interactionMentions.length
-                  ? 'Retrieved FDA label text explicitly mentions another medicine in your list.'
-                  : 'No exact mention between your entered medicines was detected in the retrieved FDA Drug Interactions text.'}
-              </p>
-              <div>
-                <b>Reasons:</b>
-                {interactionMentions.length ? (
-                  <ul>
-                    {interactionMentions.map((mention, index) => (
-                      <li
-                        key={`${mention.labelMedicine}-${mention.mentionedMedicine}-${index}`}
-                      >
-                        The {mention.labelMedicine} label mentions{' '}
-                        {mention.mentionedMedicine}.
-                        {mention.excerpt && (
-                          <blockquote>{mention.excerpt}</blockquote>
-                        )}
-                        {mention.sourceUrl && (
-                          <a href={mention.sourceUrl} target="_blank" rel="noreferrer">
-                            View label source ↗
-                          </a>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>
-                    No exact medicine-name match was found in retrieved Drug
-                    Interactions sections. The lookup may miss different wording
-                    or information not present in those labels.
-                  </p>
-                )}
-              </div>
-              <p>
-                <b>Is the combination safe?</b> This lookup cannot determine
-                that. The percentage measures label text mentions, not the
-                chance or severity of harm. No detected mention does not mean
-                the combination is safe. Ask a pharmacist or prescriber to
-                verify it.
-              </p>
-            </article>
+            <p className="muted">
+              Label text mention count: {possiblePairCount > 0
+                ? `${mentionedPairCount} of ${possiblePairCount} medicine pairs (${mentionPercentage}%).`
+                : 'A percentage cannot be calculated because fewer than two medicines were entered.'}
+              {' '}This is not a measure of risk.
+            </p>
 
             {report.limitations?.length > 0 && (
               <>
