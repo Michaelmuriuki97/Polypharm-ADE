@@ -3,7 +3,6 @@ import {
   Activity,
   Eye,
   EyeOff,
-  LogOut,
   Plus,
   ShieldCheck,
   Trash2,
@@ -256,16 +255,12 @@ function formatSectionName(name) {
     .join(' ');
 }
 
-function Workspace({ user, onLogout, onAccountDeleted }) {
+function Workspace({ user }) {
   const [input, setInput] = useState('');
   const [medications, setMedications] = useState([]);
   const [report, setReport] = useState(null);
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [deletePassword, setDeletePassword] = useState('');
-  const [deleteError, setDeleteError] = useState('');
-  const [deleteBusy, setDeleteBusy] = useState(false);
 
   const labelResults = report?.labels || [];
   const interactionMentions = report?.interactionSummary?.mentions || [];
@@ -354,29 +349,6 @@ function Workspace({ user, onLogout, onAccountDeleted }) {
     }
   }
 
-  async function deleteAccount(event) {
-    event.preventDefault();
-    setDeleteError('');
-
-    if (
-      !window.confirm(
-        'Permanently delete your account? This action cannot be undone.'
-      )
-    ) {
-      return;
-    }
-
-    setDeleteBusy(true);
-    try {
-      await authApi.deleteAccount({ password: deletePassword });
-      onAccountDeleted();
-    } catch (err) {
-      setDeleteError(err.message || 'Could not delete the account.');
-    } finally {
-      setDeleteBusy(false);
-    }
-  }
-
   return (
     <main className="workspace">
       <header className="workspace-header">
@@ -388,49 +360,7 @@ function Workspace({ user, onLogout, onAccountDeleted }) {
           <p>Signed in as {user.full_name || user.email}</p>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <button className="secondary" onClick={onLogout}>
-            <LogOut size={16} />
-            Log out
-          </button>
-          <button
-            className="secondary"
-            type="button"
-            onClick={() => {
-              setDeleteOpen(value => !value);
-              setDeleteError('');
-            }}
-          >
-            <Trash2 size={16} />
-            Delete account
-          </button>
-        </div>
       </header>
-
-      {deleteOpen && (
-        <section className="panel" aria-labelledby="delete-account-title">
-          <h2 id="delete-account-title">Permanently delete your account</h2>
-          <p>
-            This removes your account and signs out its sessions. This action
-            cannot be undone. Enter your current password to continue.
-          </p>
-          <form onSubmit={deleteAccount}>
-            <PasswordField
-              label="Current password"
-              value={deletePassword}
-              onChange={event => setDeletePassword(event.target.value)}
-            />
-            {deleteError && (
-              <p className="error" role="alert">
-                {deleteError}
-              </p>
-            )}
-            <button className="secondary" type="submit" disabled={deleteBusy}>
-              {deleteBusy ? 'Deleting…' : 'Confirm permanent deletion'}
-            </button>
-          </form>
-        </section>
-      )}
 
       <section className="panel">
         <h2>Medicine list</h2>
@@ -673,16 +603,6 @@ export default function App() {
       .finally(() => setChecking(false));
   }, []);
 
-  async function logout() {
-    try {
-      await authApi.logout();
-    } catch {
-      // Clear the signed-in view even if the logout request fails.
-    } finally {
-      setUser(null);
-    }
-  }
-
   function finishPasswordReset() {
     setResetToken('');
     setMode('login');
@@ -697,8 +617,6 @@ export default function App() {
     return (
       <Workspace
         user={user}
-        onLogout={logout}
-        onAccountDeleted={() => setUser(null)}
       />
     );
   }
