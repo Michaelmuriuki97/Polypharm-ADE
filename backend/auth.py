@@ -15,7 +15,15 @@ from email.message import EmailMessage
 from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, Cookie, Depends, HTTPException, Response, status
+from fastapi import (
+    APIRouter,
+    BackgroundTasks,
+    Cookie,
+    Depends,
+    HTTPException,
+    Response,
+    status,
+)
 from pydantic import BaseModel, EmailStr, Field
 
 logger = logging.getLogger(__name__)
@@ -391,7 +399,11 @@ def _create_session(user_id: int, response: Response) -> None:
 
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
-def signup(payload: SignupPayload, response: Response):
+def signup(
+    payload: SignupPayload,
+    response: Response,
+    background_tasks: BackgroundTasks,
+):
     name = " ".join(payload.full_name.strip().split())
     email = str(payload.email).strip().lower()
 
@@ -421,10 +433,12 @@ def signup(payload: SignupPayload, response: Response):
         )
 
     _create_session(user_id, response)
-    notifications = _send_signup_notifications(name, email, now)
+    # SMTP connections may take several seconds or time out. Queue both
+    # notifications so the user receives the signup response immediately.
+    background_tasks.add_task(_send_signup_notifications, name, email, now)
     return {
         "user": _public_user(row),
-        "email_notifications": notifications,
+        "email_notifications": "queued",
     }
 
 
