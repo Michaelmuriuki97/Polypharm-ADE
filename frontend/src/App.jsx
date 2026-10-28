@@ -268,6 +268,15 @@ function summarizeLabelText(text, limit = 420) {
   return `${excerpt.slice(0, sentenceEnd > limit * 0.55 ? sentenceEnd + 1 : limit).trim()}…`;
 }
 
+const labelWordingRank = { ungraded: 0, low: 1, moderate: 2, high: 3, critical: 4 };
+const labelWordingTitle = {
+  ungraded: 'Ungraded',
+  low: 'Low label wording',
+  moderate: 'Moderate label wording',
+  high: 'High label wording',
+  critical: 'Critical label wording',
+};
+
 function Workspace({ user }) {
   const [input, setInput] = useState('');
   const [medications, setMedications] = useState([]);
@@ -293,6 +302,14 @@ function Workspace({ user }) {
   const mentionedPairCount = Math.min(
     possiblePairCount,
     mentionedPairKeys.size
+  );
+  const highestLabelWording = interactionMentions.reduce(
+    (highest, mention) =>
+      (labelWordingRank[mention.labelWordingLevel] || 0) >
+      (labelWordingRank[highest] || 0)
+        ? mention.labelWordingLevel
+        : highest,
+    'ungraded'
   );
   const mentionPercentage =
     possiblePairCount > 0
@@ -446,6 +463,23 @@ function Workspace({ user }) {
               <h3>Lookup summary</h3>
               <p>{report.summary}</p>
               <p>
+                <b>FDA label wording level:</b>{' '}
+                <span className={`wording-level ${highestLabelWording}`}>
+                  {interactionMentions.length
+                    ? labelWordingTitle[highestLabelWording]
+                    : 'Ungraded — no direct label mention detected'}
+                </span>
+                {interactionMentions.length > 0 && highestLabelWording !== 'ungraded' && (
+                  <span> (highest explicit wording among the matches below)</span>
+                )}
+              </p>
+              <p>
+                <b>Medicine pairs with a label mention:</b>{' '}
+                {possiblePairCount > 0
+                  ? `${mentionedPairCount} of ${possiblePairCount} (${mentionPercentage}%). This is the share of entered pairs with an exact label-text mention, not a probability of harm.`
+                  : 'Enter at least two medicines to compare pairs.'}
+              </p>
+              <p>
                 <b>Possible interaction mentions:</b>{' '}
                 {report.interactionSummary?.message ||
                   'No interaction summary was returned.'}
@@ -458,15 +492,24 @@ function Workspace({ user }) {
                     >
                       The {mention.labelMedicine} label mentions{' '}
                       {mention.mentionedMedicine}.
+                      {' '}FDA label wording level:{' '}
+                      <span className={`wording-level ${mention.labelWordingLevel || 'ungraded'}`}>
+                        {labelWordingTitle[mention.labelWordingLevel] || 'Ungraded'}
+                      </span>
+                      {mention.labelWordingEvidence && (
+                        <> — wording: “{mention.labelWordingEvidence}”</>
+                      )}
                       {mention.excerpt && <blockquote>{mention.excerpt}</blockquote>}
                     </li>
                   ))}
                 </ul>
               )}
               <p>
-                This is a text lookup, not a safety assessment. No detected
-                mention does not mean the medicines are safe to take together.
-                Ask a pharmacist or prescriber to verify the results.
+                The wording level describes phrases found near a medicine name
+                in the FDA label; it is not a clinical risk grade. The pair
+                percentage is not a probability of harm. No detected mention
+                does not mean the medicines are safe to take together. Ask a
+                pharmacist or prescriber to verify the results.
               </p>
             </article>
 

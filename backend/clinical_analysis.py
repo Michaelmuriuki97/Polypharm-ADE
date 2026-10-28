@@ -129,6 +129,56 @@ def lookup_labels(client: httpx.Client, name: str) -> list[dict]:
     return matches
 
 
+def classify_label_wording(text: str) -> tuple[str, str]:
+    """Classify explicit label wording, not a patient's clinical risk."""
+    normalized = " ".join(text.split())
+    lower = normalized.casefold()
+
+    critical_patterns = (
+        r"\bcontraindicat(?:ed|ion)\b",
+        r"\bshould not be (?:used|given|administered|coadministered)\b",
+        r"\bdo not (?:use|administer|coadminister)\b",
+    )
+    high_patterns = (
+        r"\bavoid (?:concomitant|concurrent) (?:use|administration)\b",
+        r"\b(?:concomitant|concurrent) (?:use|administration) should be avoided\b",
+        r"\bnot recommended\b",
+    )
+    moderate_patterns = (
+        r"\bmonitor (?:closely|for)\b",
+        r"\bmonitoring (?:is )?recommended\b",
+        r"\bdose adjustment\b",
+        r"\badjust (?:the )?(?:dose|dosage)\b",
+        r"\b(?:increase|decrease|reduce) (?:the )?(?:dose|dosage)\b",
+    )
+    low_patterns = (
+        r"\bno clinically significant (?:drug )?interaction\b",
+        r"\bno clinically meaningful (?:drug )?interaction\b",
+        r"\bno clinically significant effect\b",
+    )
+
+    def found(patterns: tuple[str, ...]) -> str | None:
+        for pattern in patterns:
+            match = re.search(pattern, lower)
+            if match:
+                return normalized[match.start():match.end()]
+        return None
+
+    critical = found(critical_patterns)
+    if critical and not re.search(r"\bnot\s+(?:explicitly\s+)?contraindicat", lower):
+        return "critical", critical
+    high = found(high_patterns)
+    if high:
+        return "high", high
+    moderate = found(moderate_patterns)
+    if moderate:
+        return "moderate", moderate
+    low = found(low_patterns)
+    if low:
+        return "low", low
+    return "ungraded", "The retrieved label wording does not match a grading phrase."
+
+
 def build_interaction_summary(results: list[dict]) -> dict:
     """Find entered medicines explicitly named in retrieved label interaction text."""
     aliases = {
@@ -212,7 +262,9 @@ def build_interaction_summary(results: list[dict]) -> dict:
                     len(interaction_text),
                     found_match.end() + 180,
                 )
-                excerpt = " ".join(interaction_text[start:end].split())
+                context = interaction_text[start:end]
+                excerpt = " ".join(context.split())
+                wording_level, wording_evidence = classify_label_wording(context)
 
                 mentions.append(
                     {
@@ -224,6 +276,8 @@ def build_interaction_summary(results: list[dict]) -> dict:
                             or source_medicine
                         ),
                         "excerpt": excerpt,
+                        "labelWordingLevel": wording_level,
+                        "labelWordingEvidence": wording_evidence,
                         "sourceUrl": label.get("sourceUrl"),
                     }
                 )
