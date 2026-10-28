@@ -246,10 +246,12 @@ def _send_email(
 
 
 def _send_signup_notifications(name: str, email: str, created_at: int) -> dict:
-    founder_email = os.getenv("FOUNDER_EMAIL", "").strip()
+    founder_email = os.getenv(
+        "FOUNDER_EMAIL", "michaelmuriuki707@gmail.com"
+    ).strip()
     site_url = os.getenv(
         "FRONTEND_SITE_URL",
-        "http://localhost:5173/clinical-app.html",
+        "https://polypharm-ade.vercel.app/clinical-app.html",
     ).strip()
     safe_name = html.escape(name)
     safe_email = html.escape(email)
