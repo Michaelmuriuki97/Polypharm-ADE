@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://polypharm-ade-api.onrender.com/api/:path*"
+    }
+  ]
+}

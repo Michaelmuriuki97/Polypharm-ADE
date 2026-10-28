@@ -1,6 +1,8 @@
-const API_BASE =
-  import.meta.env.VITE_API_BASE ||
-  `${window.location.protocol}//${window.location.hostname}:8000`;
+// In production, use the Vercel same-origin /api rewrite so session cookies
+// remain first-party. Keep the direct FastAPI URL for local development.
+const API_BASE = import.meta.env.DEV
+  ? import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+  : '';
   
 
 async function request(path, options = {}) {
