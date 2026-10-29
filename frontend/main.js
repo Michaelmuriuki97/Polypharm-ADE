@@ -1,4 +1,7 @@
+import { mountGiftSupport } from './gift-support.js';
+
 (() => {
+  mountGiftSupport();
   const toggle = document.getElementById('hamburger');
   const nav = document.getElementById('nav-menu');
 

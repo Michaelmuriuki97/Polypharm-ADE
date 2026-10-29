@@ -11,6 +11,7 @@ import {
   X,
 } from 'lucide-react';
 import { authApi, clinicalApi } from '../api.js';
+import { mountGiftSupport } from '../gift-support.js';
 
 function PasswordField({
   label = 'Password',
@@ -795,6 +796,8 @@ export default function App() {
   const [mode, setMode] = useState('login');
   const [checking, setChecking] = useState(true);
   const [resetToken, setResetToken] = useState('');
+
+  useEffect(() => mountGiftSupport(), []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);

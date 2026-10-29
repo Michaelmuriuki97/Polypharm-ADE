@@ -1,0 +1,76 @@
+.gift-support-widget {
+  position: fixed;
+  z-index: 1200;
+  width: 54px;
+  height: 54px;
+  font-family: inherit;
+}
+
+.gift-support-trigger {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  padding: 0;
+  border: 2px solid rgba(255, 255, 255, .85);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #72e2d7, #93c8ff);
+  box-shadow: 0 7px 22px rgba(9, 18, 45, .3), 0 0 0 5px rgba(101, 223, 211, .16);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  animation: gift-support-pulse 2.6s ease-in-out infinite;
+}
+
+.gift-support-trigger:active { cursor: grabbing; }
+.gift-support-trigger span { font-size: 25px; line-height: 1; }
+.gift-support-trigger:focus-visible,
+.gift-support-close:focus-visible,
+.gift-support-copy:focus-visible { outline: 3px solid #70e6d9; outline-offset: 3px; }
+
+.gift-support-popover {
+  position: absolute;
+  right: 0;
+  bottom: 67px;
+  width: min(310px, calc(100vw - 28px));
+  padding: 20px;
+  color: #eef2ff;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 17px;
+  background: #17203b;
+  box-shadow: 0 18px 50px rgba(4, 8, 25, .38);
+}
+
+.gift-support-widget.is-left .gift-support-popover { right: auto; left: 0; }
+.gift-support-popover[hidden] { display: none; }
+.gift-support-popover strong { display: block; padding-right: 22px; font-size: 16px; }
+.gift-support-popover p { margin: 9px 0 13px; color: #c5cee2; font-size: 13px; line-height: 1.5; }
+
+.gift-support-close {
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  color: #e6edff;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 9px;
+  background: rgba(255,255,255,.06);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.gift-support-number-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.gift-support-number { color: #71e2d6; font-size: 15px; font-weight: 800; letter-spacing: .025em; white-space: nowrap; }
+.gift-support-copy { padding: 8px 10px; color: #071b25; border: 0; border-radius: 9px; background: linear-gradient(120deg, #68e0d4, #89c5f4); font-size: 12px; font-weight: 800; cursor: pointer; }
+.gift-support-feedback { display: block; min-height: 16px; margin-top: 8px; color: #b9f5e9; font-size: 11px; }
+
+@keyframes gift-support-pulse {
+  0%, 100% { box-shadow: 0 7px 22px rgba(9, 18, 45, .3), 0 0 0 4px rgba(101, 223, 211, .14); }
+  50% { box-shadow: 0 9px 25px rgba(9, 18, 45, .34), 0 0 0 8px rgba(101, 223, 211, .08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gift-support-trigger { animation: none; }
+}
