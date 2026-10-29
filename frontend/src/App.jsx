@@ -353,8 +353,7 @@ function AIAssistantPanel({ report, medications, configured, onClose }) {
         <p className="ai-privacy-note">
           Do not include patient names or other identifying details. Google may
           use content sent on its free tier to improve its products. Free-tier
-          access has model and rate limits; usage may incur charges if the
-          project uses a paid tier.
+          access has model and rate limits; usage may incur charges if your account uses a paid tier.
         </p>
         {error && <p className="error" role="alert">{error}</p>}
         <button

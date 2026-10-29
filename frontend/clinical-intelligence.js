@@ -1,5 +1,5 @@
 /* ============================================================
-   POLYPHARM ADE SUPPORT PROJECT
+   POLYPHARM ADE CLINICAL SUPPORT
    CLINICAL INTELLIGENCE ENGINE
    ============================================================
 
