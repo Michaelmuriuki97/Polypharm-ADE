@@ -2491,6 +2491,143 @@ footer span {
   }
 }
 
+.care-photos-section {
+  padding: 72px 25px 78px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.care-photos-inner {
+  width: min(1150px, 100%);
+  margin: 0 auto;
+}
+
+.care-photos-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 25px;
+}
+
+.care-photos-heading h2 {
+  margin: 5px 0 8px;
+  color: var(--primary-dark);
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+}
+
+.care-photos-heading p {
+  margin: 0;
+  color: var(--secondary);
+}
+
+.care-photos-controls {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 10px;
+}
+
+.care-photos-button {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  color: var(--primary-dark);
+  border: 1px solid rgba(69, 35, 168, 0.2);
+  border-radius: 50%;
+  background: #f4f1ff;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: color .2s ease, background .2s ease, transform .2s ease;
+}
+
+.care-photos-button:hover {
+  color: #fff;
+  background: var(--primary);
+  transform: translateY(-2px);
+}
+
+.care-photos-button:focus-visible,
+.care-photos-viewport:focus-visible {
+  outline: 3px solid #56c5d4;
+  outline-offset: 3px;
+}
+
+.care-photos-viewport {
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.care-photos-viewport:active {
+  cursor: grabbing;
+}
+
+.care-photos-track {
+  display: flex;
+  gap: 18px;
+  will-change: transform;
+  transition: transform .65s cubic-bezier(.22, .68, 0, 1);
+}
+
+.care-photo-card {
+  position: relative;
+  flex: 0 0 clamp(245px, 30vw, 345px);
+  height: clamp(220px, 25vw, 300px);
+  margin: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #e9e7f3;
+  box-shadow: 0 12px 32px rgba(24, 17, 57, .12);
+}
+
+.care-photo-card::after {
+  position: absolute;
+  inset: 35% 0 0;
+  background: linear-gradient(transparent, rgba(10, 12, 32, .78));
+  content: "";
+  pointer-events: none;
+}
+
+.care-photo-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .55s ease;
+}
+
+.care-photo-card:hover img {
+  transform: scale(1.045);
+}
+
+.care-photo-card figcaption {
+  position: absolute;
+  z-index: 1;
+  right: 18px;
+  bottom: 17px;
+  left: 18px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+}
+
+@media (max-width: 650px) {
+  .care-photos-section { padding: 58px 18px 64px; }
+  .care-photos-heading { align-items: flex-start; }
+  .care-photos-heading p { max-width: 36ch; }
+  .care-photos-controls { align-self: center; }
+  .care-photo-card { flex-basis: min(78vw, 330px); height: 240px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .care-photos-track,
+  .care-photo-card img,
+  .care-photos-button { transition: none; }
+}
+
 @media (max-width: 700px) {
   .footer-inner {
     grid-template-columns: 1fr;

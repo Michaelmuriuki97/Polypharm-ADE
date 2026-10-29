@@ -201,4 +201,95 @@
     loadSafetyData();
     window.setInterval(loadSafetyData, 15 * 60 * 1000);
   }
+
+  const photoViewport = document.querySelector('[data-photo-viewport]');
+  const photoTrack = document.querySelector('[data-photo-track]');
+
+  if (photoViewport && photoTrack) {
+    const originalSlides = Array.from(photoTrack.children);
+    const slideCount = originalSlides.length;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let photoIndex = 0;
+    let autoAdvance;
+    let dragStartX = null;
+
+    originalSlides.forEach(slide => {
+      const clone = slide.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      clone.inert = true;
+      photoTrack.appendChild(clone);
+    });
+
+    const slideDistance = () => {
+      const slide = photoTrack.firstElementChild;
+      if (!slide) return 0;
+      const styles = getComputedStyle(photoTrack);
+      return slide.getBoundingClientRect().width + (parseFloat(styles.columnGap || styles.gap) || 0);
+    };
+
+    const positionPhotos = (animate = true) => {
+      photoTrack.style.transition = animate && !reduceMotion.matches ? '' : 'none';
+      photoTrack.style.transform = `translate3d(${-photoIndex * slideDistance()}px, 0, 0)`;
+    };
+
+    const nextPhoto = () => {
+      photoIndex += 1;
+      positionPhotos();
+    };
+
+    const previousPhoto = () => {
+      if (photoIndex === 0) {
+        photoIndex = slideCount;
+        positionPhotos(false);
+        requestAnimationFrame(() => {
+          photoIndex -= 1;
+          positionPhotos();
+        });
+        return;
+      }
+      photoIndex -= 1;
+      positionPhotos();
+    };
+
+    photoTrack.addEventListener('transitionend', event => {
+      if (event.target !== photoTrack || photoIndex < slideCount) return;
+      photoIndex = 0;
+      positionPhotos(false);
+    });
+
+    const stopAutoAdvance = () => window.clearInterval(autoAdvance);
+    const startAutoAdvance = () => {
+      stopAutoAdvance();
+      if (!reduceMotion.matches && !document.hidden) autoAdvance = window.setInterval(nextPhoto, 4200);
+    };
+
+    photoViewport.addEventListener('mouseenter', stopAutoAdvance);
+    photoViewport.addEventListener('mouseleave', startAutoAdvance);
+    photoViewport.addEventListener('focusin', stopAutoAdvance);
+    photoViewport.addEventListener('focusout', event => {
+      if (!photoViewport.contains(event.relatedTarget)) startAutoAdvance();
+    });
+    photoViewport.addEventListener('pointerdown', event => { dragStartX = event.clientX; });
+    photoViewport.addEventListener('pointerup', event => {
+      if (dragStartX === null) return;
+      const distance = event.clientX - dragStartX;
+      dragStartX = null;
+      if (Math.abs(distance) > 45) {
+        distance > 0 ? previousPhoto() : nextPhoto();
+        startAutoAdvance();
+      }
+    });
+    photoViewport.addEventListener('pointercancel', () => { dragStartX = null; });
+    photoViewport.addEventListener('keydown', event => {
+      if (event.key === 'ArrowRight') { event.preventDefault(); nextPhoto(); startAutoAdvance(); }
+      if (event.key === 'ArrowLeft') { event.preventDefault(); previousPhoto(); startAutoAdvance(); }
+    });
+    document.querySelector('[data-photo-next]')?.addEventListener('click', () => { nextPhoto(); startAutoAdvance(); });
+    document.querySelector('[data-photo-prev]')?.addEventListener('click', () => { previousPhoto(); startAutoAdvance(); });
+    window.addEventListener('resize', () => positionPhotos(false));
+    document.addEventListener('visibilitychange', startAutoAdvance);
+    reduceMotion.addEventListener('change', () => { positionPhotos(false); startAutoAdvance(); });
+    positionPhotos(false);
+    startAutoAdvance();
+  }
 })();
