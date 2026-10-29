@@ -4,11 +4,8 @@ import {
   Eye,
   EyeOff,
   Plus,
-  Send,
   ShieldCheck,
-  Sparkles,
   Trash2,
-  X,
 } from 'lucide-react';
 import { authApi, clinicalApi } from '../api.js';
 import { mountGiftSupport } from '../gift-support.js';
@@ -252,130 +249,6 @@ function AuthForm({ mode, onSuccess, onChangeMode, resetToken, onResetDone }) {
   );
 }
 
-function buildAssistantEvidence(report) {
-  const medications = (report?.labels || []).map(item => ({
-    medicine: item.medicine,
-    labels: (item.labels || []).slice(0, 1).map(label => ({
-      brandName: label.brandName,
-      genericName: label.genericName,
-      sections: Object.fromEntries(
-        ['drug_interactions', 'warnings', 'contraindications', 'precautions']
-          .filter(name => label.sections?.[name])
-          .map(name => [name, String(label.sections[name]).slice(0, 900)])
-      ),
-    })),
-  }));
-
-  const evidence = {
-    lookupSummary: report?.summary,
-    interactionSummary: report?.interactionSummary,
-    medications,
-  };
-
-  while (JSON.stringify(evidence).length > 14000 && medications.length > 1) {
-    medications.pop();
-  }
-  return JSON.stringify(evidence).slice(0, 14000);
-}
-
-function AIAssistantPanel({ report, medications, configured, onClose }) {
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
-  const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [consented, setConsented] = useState(false);
-
-  async function submitQuestion(event) {
-    event.preventDefault();
-    setBusy(true);
-    setError('');
-    setAnswer('');
-    try {
-      const result = await clinicalApi.askAssistant({
-        question: question.trim(),
-        medications,
-        evidence: buildAssistantEvidence(report),
-        share_with_google: consented,
-      });
-      setAnswer(result.answer);
-    } catch (err) {
-      setError(err.message || 'The AI assistant could not answer. Please try again.');
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  return (
-    <section className="panel ai-panel" aria-labelledby="ai-assistant-title">
-      <div className="ai-panel-heading">
-        <h2 id="ai-assistant-title"><Sparkles size={20} /> AI label assistant</h2>
-        <button className="ai-close" type="button" onClick={onClose} aria-label="Close AI assistant">
-          <X size={18} />
-        </button>
-      </div>
-      <p>
-        Ask for a plain-language explanation of the FDA label results above.
-        The assistant cannot determine whether a combination is safe or replace
-        advice from a pharmacist or prescriber.
-      </p>
-
-      {configured === false && (
-        <p className="notice" role="status">
-          Gemini is not connected yet. Add a <code>GEMINI_API_KEY</code> to the
-          Render backend environment to enable answers.
-        </p>
-      )}
-      {configured === null && <p className="muted">Checking AI availability…</p>}
-      {!report && <p className="muted">Run an FDA label lookup before asking about results.</p>}
-
-      <form onSubmit={submitQuestion}>
-        <label className="ai-question-label" htmlFor="ai-question">Your question</label>
-        <textarea
-          id="ai-question"
-          value={question}
-          onChange={event => setQuestion(event.target.value)}
-          maxLength={1200}
-          placeholder="For example: What does the warning in this label mean?"
-          required
-          disabled={!report || configured !== true || busy}
-        />
-        <label className="ai-consent">
-          <input
-            type="checkbox"
-            checked={consented}
-            onChange={event => setConsented(event.target.checked)}
-            disabled={!report || configured !== true || busy}
-          />
-          <span>
-            I agree to send my question, the medicine names, and the FDA label
-            excerpts shown here to Google Gemini to generate an explanation.
-          </span>
-        </label>
-        <p className="ai-privacy-note">
-          Do not include patient names or other identifying details. Google may
-          use content sent on its free tier to improve its products. Free-tier
-          access has model and rate limits; usage may incur charges if your account uses a paid tier.
-        </p>
-        {error && <p className="error" role="alert">{error}</p>}
-        <button
-          className="primary"
-          type="submit"
-          disabled={!report || configured !== true || !consented || !question.trim() || busy}
-        >
-          <Send size={16} /> {busy ? 'Asking AI…' : 'Ask AI'}
-        </button>
-      </form>
-
-      {answer && (
-        <article className="ai-response" aria-live="polite">
-          <h3><Sparkles size={17} /> AI explanation</h3>
-          <p>{answer}</p>
-        </article>
-      )}
-    </section>
-  );
-}
-
 function formatSectionName(name) {
   return name
     .split('_')
@@ -411,15 +284,6 @@ function Workspace({ user }) {
   const [report, setReport] = useState(null);
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
-  const [aiConfigured, setAiConfigured] = useState(null);
-  const [aiOpen, setAiOpen] = useState(false);
-
-  useEffect(() => {
-    clinicalApi
-      .health()
-      .then(result => setAiConfigured(Boolean(result.aiConfigured)))
-      .catch(() => setAiConfigured(false));
-  }, []);
 
   const labelResults = report?.labels || [];
   const interactionMentions = report?.interactionSummary?.mentions || [];
@@ -526,25 +390,7 @@ function Workspace({ user }) {
           <h1>FDA Drug-Label Lookup</h1>
           <p>Signed in as {user.full_name || user.email}</p>
         </div>
-        <button
-          className="secondary ai-launch"
-          type="button"
-          onClick={() => setAiOpen(open => !open)}
-          aria-expanded={aiOpen}
-          aria-controls="ai-assistant-title"
-        >
-          <Sparkles size={17} /> AI assistant
-        </button>
       </header>
-
-      {aiOpen && (
-        <AIAssistantPanel
-          report={report}
-          medications={medications}
-          configured={aiConfigured}
-          onClose={() => setAiOpen(false)}
-        />
-      )}
 
       <section className="panel">
         <h2>Medicine list</h2>

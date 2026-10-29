@@ -271,19 +271,22 @@
     <p class="safety-statistics-intro">Figures update from the Pharmacy and Poisons Board's public PvERS dashboard.</p>
     <div class="safety-stat-spheres">
       <article class="safety-stat-sphere">
+        <span class="safety-stat-step">REPORT 01</span>
         <span class="safety-stat-label">Reports recorded</span>
         <strong data-live-count="totalReportedErrors">—</strong>
-        <small>total medication-error reports shown by the dashboard</small>
+        <small>Total medication-error reports shown by the dashboard</small>
       </article>
       <article class="safety-stat-sphere safety-stat-sphere-alt">
+        <span class="safety-stat-step">REPORT 02</span>
         <span class="safety-stat-label"><span data-live-year>Current year</span> reports</span>
         <strong data-live-count="currentYearReportedErrors">—</strong>
-        <small>reports listed for the current year</small>
+        <small>Reports listed for the current year</small>
       </article>
       <article class="safety-stat-sphere safety-stat-sphere-soft">
+        <span class="safety-stat-step">REPORT 03</span>
         <span class="safety-stat-label">Previous year</span>
         <strong data-live-count="priorYearReportedErrors">—</strong>
-        <small>reports listed for the previous year</small>
+        <small>Reports listed for the previous year</small>
       </article>
     </div>
     <div class="safety-explorer" aria-labelledby="safety-explorer-title">
@@ -295,7 +298,7 @@
         <article class="safety-explorer-card safety-explorer-location">
           <div class="safety-date-control">
             <label for="safety-report-date">Choose a day</label>
-            <input id="safety-report-date" type="date" aria-describedby="safety-date-granularity">
+            <div class="safety-date-actions"><input id="safety-report-date" type="date" aria-describedby="safety-date-granularity"><button id="safety-date-apply" type="button">View reports</button></div>
           </div>
           <div class="safety-date-summary" id="safety-date-summary" aria-live="polite">Loading published report data…</div>
           <p class="safety-date-granularity" id="safety-date-granularity">Choose a day to see its month highlighted. PPB publishes monthly totals here, not daily counts.</p>

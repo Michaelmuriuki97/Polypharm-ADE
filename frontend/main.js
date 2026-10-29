@@ -93,6 +93,7 @@ import { mountGiftSupport } from './gift-support.js';
     const numberFormat = new Intl.NumberFormat('en-KE');
     const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
     const reportDate = document.getElementById('safety-report-date');
+    const applyReportDate = document.getElementById('safety-date-apply');
     const dateSummary = document.getElementById('safety-date-summary');
     const countyList = document.getElementById('safety-county-list');
     const monthlyChart = document.getElementById('safety-monthly-chart');
@@ -101,10 +102,11 @@ import { mountGiftSupport } from './gift-support.js';
     const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const svgNamespace = 'http://www.w3.org/2000/svg';
 
-    if (reportDate && !reportDate.value) {
+    if (reportDate) {
       const today = new Date();
-      reportDate.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-      reportDate.max = reportDate.value;
+      const todayValue = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+      if (!reportDate.value) reportDate.value = todayValue;
+      reportDate.max = todayValue;
     }
 
     const addSvgElement = (tag, attributes, parent = monthlyChart) => {
@@ -221,7 +223,16 @@ import { mountGiftSupport } from './gift-support.js';
       if (dateSummary && selectedDateLabel) dateSummary.setAttribute('aria-label', `${selectedDateLabel}. ${dateSummary.textContent}`);
     };
 
+    reportDate?.addEventListener('input', renderBreakdowns);
     reportDate?.addEventListener('change', renderBreakdowns);
+    applyReportDate?.addEventListener('click', () => {
+      if (!reportDate?.value) {
+        if (dateSummary) dateSummary.textContent = 'Choose a date to view its published report information.';
+        return;
+      }
+      renderBreakdowns();
+      dateSummary?.scrollIntoView({ behavior: motionPreference.matches ? 'auto' : 'smooth', block: 'nearest' });
+    });
 
     const animateValue = (element, target) => {
       const startValue = Number(element.dataset.currentValue || 0);
