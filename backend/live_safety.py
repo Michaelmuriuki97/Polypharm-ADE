@@ -91,8 +91,13 @@ def _extract_counts(html: str) -> tuple[int, int, int, int]:
                     if count is not None:
                         by_year[int(match.group())] = count
 
-    if total_errors is None or not by_year:
+    if not by_year:
         raise ValueError("The public dashboard format did not contain the expected totals.")
+
+    # The PPB dashboard currently omits a total row from its county table. Its
+    # annual table is complete, so sum those published yearly report totals.
+    if total_errors is None:
+        total_errors = sum(by_year.values())
 
     current_year = max(by_year)
     current_year_count = by_year[current_year]
