@@ -294,7 +294,7 @@ function AIAssistantPanel({ report, medications, configured, onClose }) {
         question: question.trim(),
         medications,
         evidence: buildAssistantEvidence(report),
-        share_with_openai: consented,
+        share_with_google: consented,
       });
       setAnswer(result.answer);
     } catch (err) {
@@ -320,7 +320,7 @@ function AIAssistantPanel({ report, medications, configured, onClose }) {
 
       {configured === false && (
         <p className="notice" role="status">
-          AI is not connected yet. Add an <code>OPENAI_API_KEY</code> to the
+          Gemini is not connected yet. Add a <code>GEMINI_API_KEY</code> to the
           Render backend environment to enable answers.
         </p>
       )}
@@ -347,12 +347,14 @@ function AIAssistantPanel({ report, medications, configured, onClose }) {
           />
           <span>
             I agree to send my question, the medicine names, and the FDA label
-            excerpts shown here to OpenAI to generate an explanation.
+            excerpts shown here to Google Gemini to generate an explanation.
           </span>
         </label>
         <p className="ai-privacy-note">
-          Do not include patient names or other identifying details. OpenAI API
-          use may incur charges to the site operator.
+          Do not include patient names or other identifying details. Google may
+          use content sent on its free tier to improve its products. Free-tier
+          access has model and rate limits; usage may incur charges if the
+          project uses a paid tier.
         </p>
         {error && <p className="error" role="alert">{error}</p>}
         <button
