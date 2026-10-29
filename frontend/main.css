@@ -2375,6 +2375,122 @@ footer span {
   margin: 0;
 }
 
+.clinical-app-button {
+  position: relative;
+  display: flex;
+  width: min(560px, 100%);
+  min-height: 84px;
+  align-items: center;
+  gap: 18px;
+  overflow: hidden;
+  padding: 16px 22px;
+  border: 1px solid rgba(85,53,184,0.2);
+  border-radius: 20px;
+  background: linear-gradient(110deg, #ffffff 0%, #f1f7ff 60%, #e3fbf8 100%);
+  color: var(--primary-dark);
+  text-align: left;
+  box-shadow: 0 12px 30px rgba(42,15,118,0.16), 0 0 0 0 rgba(85,53,184,0.14);
+  animation: clinical-app-cta-pulse 2.8s ease-in-out infinite;
+}
+
+.clinical-app-button::after {
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: -55%;
+  width: 35%;
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.72), transparent);
+  transform: skewX(-18deg);
+  transition: left 0.65s ease;
+}
+
+.clinical-app-button:hover::after,
+.clinical-app-button:focus-visible::after {
+  left: 120%;
+}
+
+.clinical-app-button:hover,
+.clinical-app-button:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 38px rgba(42,15,118,0.24), 0 0 0 4px rgba(85,53,184,0.11);
+}
+
+.clinical-app-button-copy {
+  display: grid;
+  gap: 4px;
+  margin: 0 !important;
+}
+
+.clinical-app-button-copy strong {
+  color: var(--primary);
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  line-height: 1.25;
+}
+
+.clinical-app-button-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #475569;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.clinical-app-button-dot {
+  width: 8px;
+  height: 8px;
+  margin: 0 !important;
+  border-radius: 50%;
+  background: #18a875;
+  box-shadow: 0 0 0 4px rgba(24,168,117,0.14);
+  animation: clinical-app-dot-pulse 1.8s ease-out infinite;
+}
+
+.clinical-app-button-arrow {
+  z-index: 1;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  place-items: center;
+  margin: 0 0 0 auto !important;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5535b8, #2a0f76);
+  color: #fff;
+  font-size: 1.35rem;
+  transition: transform 0.25s ease;
+}
+
+.clinical-app-button:hover .clinical-app-button-arrow,
+.clinical-app-button:focus-visible .clinical-app-button-arrow {
+  transform: translateX(4px);
+}
+
+@keyframes clinical-app-cta-pulse {
+  0%, 100% { box-shadow: 0 12px 30px rgba(42,15,118,0.16), 0 0 0 0 rgba(85,53,184,0.14); }
+  50% { box-shadow: 0 15px 34px rgba(42,15,118,0.21), 0 0 0 5px rgba(85,53,184,0.06); }
+}
+
+@keyframes clinical-app-dot-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(24,168,117,0.3); }
+  75%, 100% { box-shadow: 0 0 0 7px rgba(24,168,117,0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clinical-app-button,
+  .clinical-app-button-dot {
+    animation: none;
+  }
+
+  .clinical-app-button,
+  .clinical-app-button-arrow,
+  .clinical-app-button::after {
+    transition: none;
+  }
+}
+
 @media (max-width: 700px) {
   .footer-inner {
     grid-template-columns: 1fr;
