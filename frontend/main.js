@@ -1,4 +1,6 @@
 import { mountGiftSupport } from './gift-support.js';
+import './pharmacy-rules.js';
+import { safetyEducation } from './safety-education.js';
 
 (() => {
   mountGiftSupport();
@@ -52,6 +54,297 @@ import { mountGiftSupport } from './gift-support.js';
 
   if (year) {
     year.textContent = new Date().getFullYear();
+  }
+
+  const educationList = document.getElementById('safety-education-list');
+  const educationSearch = document.getElementById('safety-education-search');
+  const educationSearchStatus = document.getElementById('safety-search-status');
+
+  if (educationList && educationSearch && educationSearchStatus) {
+    const renderEducation = () => {
+      const query = educationSearch.value.trim().toLocaleLowerCase();
+      const matches = safetyEducation.filter(article => {
+        const content = `${article.category} ${article.en.title} ${article.en.summary} ${article.source}`.toLocaleLowerCase();
+        return content.includes(query);
+      });
+      educationList.replaceChildren();
+      matches.forEach(article => {
+        const details = document.createElement('details');
+        details.className = 'safety-education-item';
+        const summary = document.createElement('summary');
+        summary.textContent = article.en.title;
+        const category = document.createElement('span');
+        category.className = 'safety-education-category';
+        category.textContent = article.category;
+        const text = document.createElement('p');
+        text.textContent = article.en.summary;
+        const source = document.createElement('a');
+        source.href = article.url;
+        source.target = '_blank';
+        source.rel = 'noopener noreferrer';
+        source.textContent = `Source: ${article.source}`;
+        details.append(summary, category, text, source);
+        educationList.appendChild(details);
+      });
+      educationSearchStatus.textContent = matches.length
+        ? `${matches.length} ${matches.length === 1 ? 'topic' : 'topics'} found.`
+        : 'No topics match that search. Try another word or clear the search.';
+    };
+    educationSearch.addEventListener('input', renderEducation);
+    renderEducation();
+  }
+
+  const medicationForm = document.getElementById('medication-entry-form');
+  const medicationOutput = document.getElementById('medication-list-output');
+  const medicationStatus = document.getElementById('medication-list-status');
+  const printSummary = document.getElementById('medication-print-summary');
+  const medicationRecords = [];
+
+  if (medicationForm && medicationOutput && medicationStatus && printSummary) {
+    const inputById = id => document.getElementById(id);
+    const editId = inputById('medication-edit-id');
+    const saveButton = inputById('medication-save-button');
+    const cancelEditButton = inputById('medication-cancel-edit');
+    const printButton = inputById('medication-print-button');
+    const clearButton = inputById('medication-clear-button');
+    const clearSessionButton = inputById('medication-clear-session-button');
+    const reviewedDate = inputById('record-reviewed-date');
+    if (reviewedDate && !reviewedDate.value) {
+      const today = new Date();
+      reviewedDate.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    }
+
+    const readRecord = () => ({
+      name: inputById('record-medicine-name').value.trim(),
+      strength: inputById('record-medicine-strength').value.trim(),
+      form: inputById('record-medicine-form').value.trim(),
+      instructions: inputById('record-medicine-instructions').value.trim(),
+      prescriber: inputById('record-medicine-prescriber').value.trim(),
+      notes: inputById('record-medicine-notes').value.trim(),
+    });
+    const appendLabel = (parent, label, value) => {
+      if (!value) return;
+      const row = document.createElement('p');
+      const strong = document.createElement('strong');
+      strong.textContent = `${label}: `;
+      row.append(strong, document.createTextNode(value));
+      parent.appendChild(row);
+    };
+    const renderMedicationList = () => {
+      medicationOutput.replaceChildren();
+      printSummary.replaceChildren();
+      const entries = document.createElement('ol');
+      entries.className = 'medication-entry-list';
+      medicationRecords.forEach((record, index) => {
+        const item = document.createElement('li');
+        const content = document.createElement('div');
+        const title = document.createElement('h4');
+        title.textContent = record.name;
+        content.appendChild(title);
+        appendLabel(content, 'Strength', record.strength);
+        appendLabel(content, 'Form', record.form);
+        appendLabel(content, 'Prescribed instructions', record.instructions);
+        appendLabel(content, 'Prescriber or facility', record.prescriber);
+        appendLabel(content, 'Notes', record.notes);
+        const actions = document.createElement('div');
+        actions.className = 'medication-entry-actions';
+        const edit = document.createElement('button');
+        edit.type = 'button';
+        edit.className = 'public-secondary-button';
+        edit.textContent = 'Edit';
+        edit.setAttribute('aria-label', `Edit ${record.name}`);
+        edit.addEventListener('click', () => {
+          editId.value = String(index);
+          inputById('record-medicine-name').value = record.name;
+          inputById('record-medicine-strength').value = record.strength;
+          inputById('record-medicine-form').value = record.form;
+          inputById('record-medicine-instructions').value = record.instructions;
+          inputById('record-medicine-prescriber').value = record.prescriber;
+          inputById('record-medicine-notes').value = record.notes;
+          saveButton.textContent = 'Save changes';
+          cancelEditButton.hidden = false;
+          inputById('record-medicine-name').focus();
+        });
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'public-secondary-button';
+        remove.textContent = 'Remove';
+        remove.setAttribute('aria-label', `Remove ${record.name}`);
+        remove.addEventListener('click', () => {
+          if (!window.confirm(`Remove ${record.name} from this list?`)) return;
+          medicationRecords.splice(index, 1);
+          renderMedicationList();
+        });
+        actions.append(edit, remove);
+        item.append(content, actions);
+        entries.appendChild(item);
+      });
+      if (medicationRecords.length) medicationOutput.appendChild(entries);
+      const contextCard = document.createElement('article');
+      contextCard.className = 'medication-context-preview';
+      const contextTitle = document.createElement('h4');
+      contextTitle.textContent = 'Other information for your care team';
+      contextCard.appendChild(contextTitle);
+      appendLabel(contextCard, 'Known allergies or status', inputById('record-allergies').value.trim());
+      appendLabel(contextCard, 'Vitamins, supplements and non-prescription medicines', inputById('record-nonprescription').value.trim());
+      appendLabel(contextCard, 'Notes or questions', inputById('record-questions').value.trim());
+      appendLabel(contextCard, 'Date last reviewed', reviewedDate.value);
+      medicationOutput.appendChild(contextCard);
+      medicationStatus.textContent = medicationRecords.length
+        ? `${medicationRecords.length} ${medicationRecords.length === 1 ? 'medicine' : 'medicines'} on your list. This record has not been clinically verified.`
+        : 'Your list is empty. Add medicines above to begin.';
+      printButton.disabled = medicationRecords.length === 0;
+      clearButton.disabled = medicationRecords.length === 0;
+
+      const printTitle = document.createElement('h1');
+      printTitle.textContent = 'My Medication List';
+      const printDate = document.createElement('p');
+      printDate.textContent = `Date last reviewed: ${reviewedDate.value || 'Not provided'}`;
+      const printItems = document.createElement('ol');
+      medicationRecords.forEach(record => {
+        const item = document.createElement('li');
+        const title = document.createElement('h2');
+        title.textContent = record.name;
+        item.appendChild(title);
+        appendLabel(item, 'Strength', record.strength);
+        appendLabel(item, 'Dosage form', record.form);
+        appendLabel(item, 'Prescribed instructions', record.instructions);
+        appendLabel(item, 'Prescriber or facility', record.prescriber);
+        appendLabel(item, 'Notes', record.notes);
+        printItems.appendChild(item);
+      });
+      printSummary.append(printTitle, printDate, printItems);
+      appendLabel(printSummary, 'Known allergies or allergy status', inputById('record-allergies').value.trim());
+      appendLabel(printSummary, 'Vitamins, supplements and non-prescription medicines', inputById('record-nonprescription').value.trim());
+      appendLabel(printSummary, 'Notes or questions', inputById('record-questions').value.trim());
+      const verification = document.createElement('p');
+      verification.className = 'print-verification-note';
+      verification.textContent = 'This is a user-prepared record and has not been verified. Review all entries with a pharmacist or clinician.';
+      printSummary.appendChild(verification);
+    };
+    const resetEditor = () => {
+      medicationForm.reset();
+      editId.value = '';
+      saveButton.textContent = 'Add to my list';
+      cancelEditButton.hidden = true;
+    };
+
+    medicationForm.addEventListener('submit', event => {
+      event.preventDefault();
+      if (!medicationForm.reportValidity()) return;
+      const record = readRecord();
+      if (!record.name) {
+        medicationStatus.textContent = 'Enter a medicine name to add it.';
+        inputById('record-medicine-name').focus();
+        return;
+      }
+      const index = editId.value === '' ? -1 : Number(editId.value);
+      if (index >= 0 && medicationRecords[index]) medicationRecords[index] = record;
+      else medicationRecords.push(record);
+      resetEditor();
+      renderMedicationList();
+      medicationStatus.textContent = index >= 0 ? 'Medicine updated in this page session.' : 'Medicine added to this page session.';
+    });
+    cancelEditButton.addEventListener('click', () => { resetEditor(); medicationStatus.textContent = 'Edit cancelled.'; });
+    clearButton.addEventListener('click', () => {
+      if (!window.confirm('Start a new list and remove all current entries and notes?')) return;
+      medicationRecords.splice(0);
+      ['record-allergies', 'record-nonprescription', 'record-questions'].forEach(id => { inputById(id).value = ''; });
+      reviewedDate.value = '';
+      resetEditor();
+      renderMedicationList();
+    });
+    clearSessionButton.addEventListener('click', () => {
+      medicationRecords.splice(0);
+      ['record-allergies', 'record-nonprescription', 'record-questions'].forEach(id => { inputById(id).value = ''; });
+      reviewedDate.value = '';
+      resetEditor();
+      renderMedicationList();
+      medicationStatus.textContent = 'Your information has been cleared from this page.';
+    });
+    printButton.addEventListener('click', () => window.print());
+    ['record-allergies', 'record-nonprescription', 'record-questions', 'record-reviewed-date'].forEach(id => {
+      inputById(id).addEventListener('input', renderMedicationList);
+      inputById(id).addEventListener('change', renderMedicationList);
+    });
+    renderMedicationList();
+  }
+
+  const publicCheckerForm = document.getElementById('public-checker-form');
+  const publicCheckerResults = document.getElementById('public-checker-results');
+  if (publicCheckerForm && publicCheckerResults) {
+    publicCheckerForm.addEventListener('submit', event => {
+      event.preventDefault();
+      publicCheckerResults.replaceChildren();
+      if (!window.PharmacyRules?.run) {
+        publicCheckerResults.textContent = 'The local rules are unavailable. Please use the FDA label lookup or speak with a pharmacist.';
+        return;
+      }
+      const medicines = [...new Set(document.getElementById('public-checker-medicines').value
+        .split(/[\n,;]+/).map(name => name.trim().replace(/\s+/g, ' ')).filter(Boolean))];
+      if (!medicines.length) {
+        publicCheckerResults.textContent = 'Enter at least one medicine name.';
+        return;
+      }
+      if (medicines.length > 20) {
+        publicCheckerResults.textContent = 'Enter no more than 20 medicine names at a time.';
+        return;
+      }
+      const ageValue = document.getElementById('public-checker-age').value;
+      const age = ageValue ? Number(ageValue) : null;
+      const knownClasses = new Set(Object.values(window.PharmacyRules.classes || {}).flat().map(name => String(name).toLowerCase()));
+      const uncovered = medicines.filter(name => !window.PharmacyRules.getDrugProfile(name).localClasses.length && !knownClasses.has(window.PharmacyRules.normalizeDrugName(name)));
+      const results = window.PharmacyRules.run(medicines, { age });
+      const summary = document.createElement('p');
+      summary.className = 'checker-summary';
+      summary.textContent = results.length
+        ? `${results.length} prototype rule ${results.length === 1 ? 'match' : 'matches'} for the medicines entered.`
+        : 'No included prototype rules matched these entries. This is not evidence that the medicines are safe together.';
+      publicCheckerResults.appendChild(summary);
+      if (uncovered.length) {
+        const message = document.createElement('p');
+        message.className = 'checker-coverage-note';
+        message.textContent = `No medicine class in the local rule list matched: ${uncovered.join(', ')}. These entries were not meaningfully assessed; this does not mean they are unknown medicines.`;
+        publicCheckerResults.appendChild(message);
+      }
+      if (!ageValue) {
+        const contextNote = document.createElement('p');
+        contextNote.className = 'checker-coverage-note';
+        contextNote.textContent = 'No age was entered. Rules that require older-adult context were not applied.';
+        publicCheckerResults.appendChild(contextNote);
+      }
+      if (results.length) {
+        const list = document.createElement('div');
+        list.className = 'checker-alert-list';
+        results.forEach(alert => {
+          const card = document.createElement('article');
+          card.className = `checker-alert checker-alert-${String(alert.severity || 'moderate').toLowerCase()}`;
+          const title = document.createElement('h4');
+          title.textContent = alert.title || alert.category || 'Rule match';
+          const severity = document.createElement('span');
+          severity.className = 'checker-severity';
+          severity.textContent = `${alert.severity || 'Review'} · prototype rule`;
+          card.append(title, severity);
+          const medicinesLine = document.createElement('p');
+          medicinesLine.textContent = `Medicines: ${(alert.drugs || []).join(', ') || 'See rule details'}`;
+          card.appendChild(medicinesLine);
+          [['Why to review', alert.mechanism], ['Potential concern', alert.clinicalEffect], ['Suggested discussion', alert.action], ['Rule source label', alert.source]].forEach(([label, value]) => {
+            if (!value) return;
+            const row = document.createElement('p');
+            const strong = document.createElement('strong');
+            strong.textContent = `${label}: `;
+            row.append(strong, document.createTextNode(value));
+            card.appendChild(row);
+          });
+          list.appendChild(card);
+        });
+        publicCheckerResults.appendChild(list);
+      }
+      const caution = document.createElement('p');
+      caution.className = 'checker-coverage-note';
+      caution.textContent = 'These locally stored rules are a research prototype, not a complete medicine-interaction service. Ask a pharmacist or prescriber to review any concern.';
+      publicCheckerResults.appendChild(caution);
+    });
   }
 
   const items = document.querySelectorAll('.reveal');

@@ -81,6 +81,7 @@
 
     <nav id="nav-menu">
       <a href="#home" class="nav-link active">Home</a>
+      <a href="#medication-safety" class="nav-link">Medication Safety</a>
       <a href="#technology" class="nav-link">Technology</a>
       <a href="#safety-updates" class="nav-link">Safety Updates</a>
       <a href="#safety-statistics" class="nav-link">Live Reports</a>
@@ -171,6 +172,101 @@
       </span>
       <span class="clinical-app-button-arrow" aria-hidden="true">→</span>
     </a>
+  </div>
+</section>
+
+<section id="medication-safety" class="public-safety-section" aria-labelledby="public-safety-title">
+  <div class="public-safety-inner">
+    <div class="public-safety-intro">
+      <span class="section-label">PRACTICAL MEDICINE SUPPORT</span>
+      <h2 id="public-safety-title">Medication Safety for Everyone</h2>
+      <p>Practical tools and trusted information to help patients, caregivers, and healthcare professionals use medicines more safely.</p>
+    </div>
+    <div class="public-tool-cards">
+      <a class="public-tool-card" href="#safety-centre"><span class="public-tool-icon" aria-hidden="true">✚</span><h3>Medication Safety Centre</h3><p>Plain-language information about labels, side effects, medicine reviews and safe storage.</p><span class="public-tool-action">Explore trusted guidance <b aria-hidden="true">→</b></span></a>
+      <a class="public-tool-card" href="#my-medication-list"><span class="public-tool-icon" aria-hidden="true">☷</span><h3>My Medication List</h3><p>Organize a private, printable medicine record to take to an appointment.</p><span class="public-tool-action">Create a list <b aria-hidden="true">→</b></span></a>
+      <a class="public-tool-card" href="#safety-checker"><span class="public-tool-icon" aria-hidden="true">⌕</span><h3>Smart Medication Safety Checker</h3><p>Review a medicine list against the site's limited, transparent prototype rules.</p><span class="public-tool-action">Review medicines <b aria-hidden="true">→</b></span></a>
+    </div>
+
+    <section id="safety-centre" class="public-tool-panel" aria-labelledby="safety-centre-title" data-language="en">
+      <div class="public-panel-heading"><div><span class="section-label">EDUCATION LIBRARY · ENGLISH</span><h3 id="safety-centre-title">Medication Safety Centre</h3><p>Short, practical guidance. Open a topic to read more and follow its source.</p></div></div>
+      <label class="safety-search-label" for="safety-education-search">Find a topic</label>
+      <input class="safety-education-search" id="safety-education-search" type="search" placeholder="Search medicine safety topics" autocomplete="off">
+      <p class="safety-search-status" id="safety-search-status" role="status" aria-live="polite">Loading topics…</p>
+      <div class="safety-education-list" id="safety-education-list"></div>
+      <p class="public-content-review">Content reviewed 29 October 2026. Source pages may be updated independently. <span>English content is structured for a future Kiswahili version.</span></p>
+    </section>
+
+    <section id="my-medication-list" class="public-tool-panel medication-record" aria-labelledby="medication-record-title">
+      <div class="public-panel-heading"><div><span class="section-label">PRIVATE TO THIS PAGE SESSION</span><h3 id="medication-record-title">My Medication List</h3><p>Create a record to review with your pharmacist or clinician. This page does not save or send it.</p></div></div>
+      <form id="medication-entry-form" class="medication-entry-form">
+        <input id="medication-edit-id" type="hidden">
+        <label>Medicine name <span aria-hidden="true">*</span><input id="record-medicine-name" name="medicine" required maxlength="120" autocomplete="off"></label>
+        <label>Strength, if known<input id="record-medicine-strength" name="strength" maxlength="80"></label>
+        <label>Dosage form, if known<input id="record-medicine-form" name="form" maxlength="80" placeholder="For example, tablet or liquid"></label>
+        <label class="medication-field-wide">Prescribed instructions, exactly as provided<input id="record-medicine-instructions" name="instructions" maxlength="240" placeholder="Enter the directions from your prescription or clinician"></label>
+        <label>Prescriber or facility (optional)<input id="record-medicine-prescriber" name="prescriber" maxlength="120"></label>
+        <label>Notes (optional)<input id="record-medicine-notes" name="notes" maxlength="240"></label>
+        <div class="medication-form-actions medication-field-wide"><button class="public-primary-button" id="medication-save-button" type="submit">Add to my list</button><button class="public-secondary-button" id="medication-cancel-edit" type="button" hidden>Cancel edit</button></div>
+      </form>
+      <div class="medication-context-grid">
+        <label for="record-allergies">Known allergies or documented allergy status</label><textarea id="record-allergies" rows="2" maxlength="500" placeholder="For example, list known allergies or write 'not known'"></textarea>
+        <label for="record-nonprescription">Vitamins, supplements and non-prescription medicines</label><textarea id="record-nonprescription" rows="2" maxlength="500"></textarea>
+        <label for="record-questions">Notes or questions for your care team</label><textarea id="record-questions" rows="2" maxlength="500"></textarea>
+        <label for="record-reviewed-date">Date last reviewed</label><input id="record-reviewed-date" type="date">
+      </div>
+      <p class="medication-list-status" id="medication-list-status" role="status" aria-live="polite">Your list is empty. Add medicines above to begin.</p>
+      <div id="medication-list-output" class="medication-list-output"></div>
+      <div id="medication-print-summary" class="medication-print-summary"></div>
+      <div class="medication-list-actions"><button type="button" class="public-secondary-button" id="medication-print-button" disabled>Print medicine list</button><button type="button" class="public-secondary-button" id="medication-clear-button" disabled>Start a new list</button><button type="button" class="public-secondary-button" id="medication-clear-session-button">Clear my information</button></div>
+      <p class="public-safety-note">This is a personal record, not a verified prescription. Check every entry with a pharmacist or clinician. Refreshing or leaving this page clears the medicine entries; they are not saved to your browser or account.</p>
+    </section>
+
+    <section id="safety-checker" class="public-tool-panel" aria-labelledby="safety-checker-title">
+      <div class="public-panel-heading"><div><span class="section-label">LOCAL PROTOTYPE RULE CHECK</span><h3 id="safety-checker-title">Smart Medication Safety Checker</h3><p>Enter medicine names, one per line. Medicine entries stay in this page session and are not sent to the API.</p></div></div>
+      <form id="public-checker-form" class="public-checker-form">
+        <label for="public-checker-medicines">Medicine names</label>
+        <textarea id="public-checker-medicines" rows="5" maxlength="1600" placeholder="For example: warfarin&#10;ibuprofen" required></textarea>
+        <label for="public-checker-age">Age (optional; used only for rules that require older-adult context)</label>
+        <input id="public-checker-age" type="number" min="1" max="120" inputmode="numeric" placeholder="Leave blank if you prefer not to enter it">
+        <button class="public-primary-button" type="submit">Check local rules</button>
+      </form>
+      <div class="public-checker-results" id="public-checker-results" aria-live="polite"></div>
+      <p class="public-safety-note">This research prototype checks only its listed medicine-class rules. It does not verify active ingredients, duplicates, all interactions, renal function, allergies, or full patient context. No alert does not mean a combination is safe. Do not stop or change a medicine based on this tool; discuss concerns with a pharmacist or prescriber. Seek urgent medical assessment for severe or rapidly worsening symptoms.</p>
+      <p class="public-source-line">General reference: <a href="https://medlineplus.gov/medicationerrors.html" target="_blank" rel="noopener noreferrer">MedlinePlus medication safety guidance</a>.</p>
+    </section>
+
+    <section id="report-medicine-problem" class="public-support-section" aria-labelledby="report-problem-title">
+      <span class="section-label">OFFICIAL REPORTING CHANNELS</span><h3 id="report-problem-title">Report a medicine problem</h3>
+      <p>You can report a suspected side effect, medication error, or poor-quality health product to Kenya’s Pharmacy and Poisons Board. A suspected reaction can be reported without proving that a medicine caused it. This website does not submit reports on your behalf.</p>
+      <a class="public-primary-button" href="https://www.pv.pharmacyboardkenya.org/pages/about" target="_blank" rel="noopener noreferrer">Open the Pharmacy and Poisons Board reporting portal <span aria-hidden="true">↗</span></a>
+    </section>
+
+    <section id="caregiver-corner" class="public-support-section" aria-labelledby="caregiver-title">
+      <span class="section-label">SUPPORTING SOMEONE YOU CARE ABOUT</span><h3 id="caregiver-title">Caregiver Corner</h3>
+      <div class="caregiver-grid">
+        <article><h4>Before an appointment</h4><p>Bring an up-to-date list of prescription medicines, non-prescription products, vitamins and supplements. Include the packages or photos of labels when practical.</p></article>
+        <article><h4>During a medicine review</h4><p>Ask what each medicine is for, how to follow its written directions, what effects to watch for, and whom to contact with concerns.</p></article>
+        <article><h4>Keep the person involved</h4><p>Invite the person you support to share their priorities and questions. Help record answers and follow-up steps with their agreement.</p></article>
+        <article><h4>When something changes</h4><p>Contact a pharmacist or clinician about confusing directions or suspected medicine problems. Do not change prescribed treatment on someone else's behalf.</p></article>
+      </div>
+    </section>
+
+    <section id="evidence-privacy" class="public-support-section evidence-privacy-section" aria-labelledby="evidence-privacy-title">
+      <span class="section-label">EVIDENCE, PRIVACY &amp; LIMITS</span><h3 id="evidence-privacy-title">Use these tools with care</h3>
+      <p>Educational summaries link to their sources. The local checker uses the existing Polypharm ADE research rules and has not been established here as a complete or independently validated clinical system. FDA label lookup remains in the separate authenticated clinical app. Automated output cannot diagnose a problem or replace individual advice from a qualified health professional.</p>
+      <p>The medicine list and checker run in your browser page session; this public feature does not save the entries, put them in a URL, or send them to the backend. Use “Clear my information” to remove entries immediately. A page refresh also clears them. Avoid entering names or other identifying information.</p>
+      <p>For concerning symptoms, contact a health professional. Severe or rapidly worsening symptoms need urgent assessment. Do not delay urgent care to complete a website tool.</p>
+      <ul class="evidence-links">
+        <li><a href="https://www.who.int/initiatives/medication-without-harm" target="_blank" rel="noopener noreferrer">WHO: Medication Without Harm</a></li>
+        <li><a href="https://medlineplus.gov/ency/patientinstructions/000883.htm" target="_blank" rel="noopener noreferrer">MedlinePlus: Taking multiple medicines safely</a></li>
+        <li><a href="https://medlineplus.gov/medicationerrors.html" target="_blank" rel="noopener noreferrer">MedlinePlus: Medication errors and prevention</a></li>
+        <li><a href="https://medlineplus.gov/ency/patientinstructions/000534.htm" target="_blank" rel="noopener noreferrer">MedlinePlus: Storing medicines</a></li>
+        <li><a href="https://www.fda.gov/drugs/understanding-over-counter-medicines/over-counter-drug-facts-label" target="_blank" rel="noopener noreferrer">FDA: Understanding an OTC Drug Facts label</a></li>
+        <li><a href="https://pv.pharmacyboardkenya.org/pages/about" target="_blank" rel="noopener noreferrer">Kenya Pharmacy and Poisons Board: reporting information</a></li>
+      </ul>
+      <p class="public-content-review">Source links checked 29 October 2026. Source organizations control their own content and review schedules.</p>
+    </section>
   </div>
 </section>
 
@@ -386,6 +482,11 @@
       <a href="#technology">Technology</a>
       <a href="#safety-updates">Safety Updates</a>
       <a href="#safety-statistics">Live Reports</a>
+      <a href="#safety-centre">Medication Safety Centre</a>
+      <a href="#my-medication-list">My Medication List</a>
+      <a href="#safety-checker">Safety Checker</a>
+      <a href="#report-medicine-problem">Report a Medicine Problem</a>
+      <a href="#caregiver-corner">Caregiver Corner</a>
       <a href="#faq">FAQs</a>
       <a href="%BASE_URL%clinical-app.html">Clinical App</a>
       <a href="%BASE_URL%contact.html" target="_blank" rel="noopener noreferrer">Contact the Team</a>
