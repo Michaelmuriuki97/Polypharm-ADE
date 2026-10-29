@@ -46,13 +46,23 @@
       }
 
       .loading-spinner {
+        position: relative;
+        display: block;
         width: 54px;
         height: 54px;
-        border: 4px solid #ffffff24;
-        border-top-color: #65dfd3;
-        border-right-color: #89c5f4;
-        border-radius: 50%;
-        animation: clinical-loading-spin .78s linear infinite;
+        animation: clinical-loading-spin 1s steps(12) infinite;
+      }
+
+      .loading-spinner > span {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 4px;
+        height: 10px;
+        margin-left: -2px;
+        border-radius: 2px;
+        background: linear-gradient(180deg, #90d8ef, #7f8ca7);
+        transform-origin: 2px 27px;
       }
 
       .visually-hidden {
@@ -92,7 +102,20 @@
     <div id="root">
       <main class="loading-screen" role="status" aria-label="Loading sign-in">
         <img class="loading-brand-icon" src="%BASE_URL%images/logo.png" alt="Polypharm ADE" />
-        <span class="loading-spinner" aria-hidden="true"></span>
+        <span class="loading-spinner" aria-hidden="true">
+          <span style="transform: rotate(0deg); opacity: .08"></span>
+          <span style="transform: rotate(30deg); opacity: .16"></span>
+          <span style="transform: rotate(60deg); opacity: .24"></span>
+          <span style="transform: rotate(90deg); opacity: .32"></span>
+          <span style="transform: rotate(120deg); opacity: .4"></span>
+          <span style="transform: rotate(150deg); opacity: .48"></span>
+          <span style="transform: rotate(180deg); opacity: .56"></span>
+          <span style="transform: rotate(210deg); opacity: .64"></span>
+          <span style="transform: rotate(240deg); opacity: .72"></span>
+          <span style="transform: rotate(270deg); opacity: .8"></span>
+          <span style="transform: rotate(300deg); opacity: .88"></span>
+          <span style="transform: rotate(330deg); opacity: .96"></span>
+        </span>
         <span class="visually-hidden">Loading sign-in…</span>
       </main>
     </div>

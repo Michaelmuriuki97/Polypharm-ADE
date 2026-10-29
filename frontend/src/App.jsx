@@ -822,7 +822,17 @@ export default function App() {
     return (
       <main className="loading-screen" role="status" aria-label="Loading sign-in">
         <img className="loading-brand-icon" src="/images/logo.png" alt="Polypharm ADE" />
-        <span className="loading-spinner" aria-hidden="true" />
+        <span className="loading-spinner" aria-hidden="true">
+          {Array.from({ length: 12 }, (_, index) => (
+            <span
+              key={index}
+              style={{
+                transform: `rotate(${index * 30}deg)`,
+                opacity: (index + 1) / 12,
+              }}
+            />
+          ))}
+        </span>
         <span className="visually-hidden">Loading sign-in…</span>
       </main>
     );
