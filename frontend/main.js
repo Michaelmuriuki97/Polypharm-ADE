@@ -92,6 +92,136 @@ import { mountGiftSupport } from './gift-support.js';
       : '';
     const numberFormat = new Intl.NumberFormat('en-KE');
     const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const reportDate = document.getElementById('safety-report-date');
+    const dateSummary = document.getElementById('safety-date-summary');
+    const countyList = document.getElementById('safety-county-list');
+    const monthlyChart = document.getElementById('safety-monthly-chart');
+    const chartCaption = document.getElementById('safety-chart-caption');
+    const explorerLive = document.getElementById('safety-explorer-live');
+    const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const svgNamespace = 'http://www.w3.org/2000/svg';
+
+    if (reportDate && !reportDate.value) {
+      const today = new Date();
+      reportDate.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+      reportDate.max = reportDate.value;
+    }
+
+    const addSvgElement = (tag, attributes, parent = monthlyChart) => {
+      const element = document.createElementNS(svgNamespace, tag);
+      Object.entries(attributes).forEach(([name, value]) => element.setAttribute(name, String(value)));
+      parent.appendChild(element);
+      return element;
+    };
+
+    let latestSafetyData = null;
+
+    const renderBreakdowns = () => {
+      if (!latestSafetyData || !reportDate || !reportDate.value) return;
+      const [selectedYear, selectedMonth] = reportDate.value.split('-').map(Number);
+      const monthlyReports = Array.isArray(latestSafetyData.monthlyReports) ? latestSafetyData.monthlyReports : [];
+      const selectedReport = monthlyReports.find(report => Number(report.year) === selectedYear && Number(report.month) === selectedMonth);
+      const selectedDateLabel = reportDate.value
+        ? new Date(`${reportDate.value}T12:00:00`).toLocaleDateString('en-KE', { day: 'numeric', month: 'long', year: 'numeric' })
+        : '';
+
+      if (dateSummary) {
+        dateSummary.textContent = selectedReport
+          ? `For ${selectedDateLabel}: PPB lists ${numberFormat.format(Number(selectedReport.count))} reports for ${monthLabels[selectedMonth - 1]} ${selectedYear}.`
+          : `For ${selectedDateLabel}: no monthly total is currently listed for ${monthLabels[selectedMonth - 1]} ${selectedYear}.`;
+      }
+      if (chartCaption) chartCaption.textContent = `Monthly medication-error reports for ${selectedYear}`;
+      if (monthlyChart) {
+        monthlyChart.replaceChildren();
+        const reportsForYear = monthLabels.map((_, index) => monthlyReports.find(report => Number(report.year) === selectedYear && Number(report.month) === index + 1));
+        const counts = reportsForYear.map(report => report ? Math.max(0, Number(report.count) || 0) : 0);
+        const maxCount = Math.max(1, ...counts);
+        const left = 48;
+        const right = 770;
+        const top = 24;
+        const baseline = 212;
+        const plotHeight = baseline - top;
+        const slotWidth = (right - left) / 12;
+        const barWidth = 25;
+        const points = [];
+
+        [0, 0.5, 1].forEach(fraction => {
+          const y = baseline - plotHeight * fraction;
+          addSvgElement('line', { x1: left, y1: y, x2: right, y2: y, class: 'safety-chart-gridline' });
+          const label = addSvgElement('text', { x: left - 9, y: y + 4, 'text-anchor': 'end', class: 'safety-chart-axis-label' });
+          label.textContent = numberFormat.format(Math.round(maxCount * fraction));
+        });
+
+        counts.forEach((count, index) => {
+          const centerX = left + slotWidth * index + slotWidth / 2;
+          const barHeight = count ? Math.max(2, (count / maxCount) * plotHeight) : 0;
+          const rect = addSvgElement('rect', {
+            x: centerX - barWidth / 2,
+            y: baseline - barHeight,
+            width: barWidth,
+            height: barHeight,
+            rx: 6,
+            class: index + 1 === selectedMonth ? 'safety-chart-bar is-selected' : 'safety-chart-bar',
+          });
+          const tooltip = addSvgElement('title', {}, rect);
+          tooltip.textContent = `${monthLabels[index]} ${selectedYear}: ${numberFormat.format(count)} reports`;
+          points.push({ x: centerX, y: baseline - (count / maxCount) * plotHeight });
+          const monthLabel = addSvgElement('text', { x: centerX, y: baseline + 22, 'text-anchor': 'middle', class: 'safety-chart-month-label' });
+          monthLabel.textContent = monthLabels[index];
+        });
+
+        const curve = points.map((point, index) => {
+          if (index === 0) return `M ${point.x} ${point.y}`;
+          const previous = points[index - 1];
+          const beforePrevious = points[Math.max(0, index - 2)];
+          const next = points[Math.min(points.length - 1, index + 1)];
+          const controlOne = { x: previous.x + (point.x - beforePrevious.x) / 6, y: previous.y + (point.y - beforePrevious.y) / 6 };
+          const controlTwo = { x: point.x - (next.x - previous.x) / 6, y: point.y - (next.y - previous.y) / 6 };
+          return `C ${controlOne.x} ${controlOne.y}, ${controlTwo.x} ${controlTwo.y}, ${point.x} ${point.y}`;
+        }).join(' ');
+        addSvgElement('path', { d: curve, class: 'safety-chart-curve' });
+        points.forEach(point => addSvgElement('circle', { cx: point.x, cy: point.y, r: 3.5, class: 'safety-chart-point' }));
+        monthlyChart.setAttribute('aria-label', `Monthly medication-error reports for ${selectedYear}. ${counts.map((count, index) => `${monthLabels[index]}: ${count}`).join(', ')}.`);
+      }
+
+      if (countyList) {
+        countyList.replaceChildren();
+        const counties = Array.isArray(latestSafetyData.countyReports) ? latestSafetyData.countyReports.slice(0, 6) : [];
+        const maxCountyCount = Math.max(1, ...counties.map(item => Number(item.count) || 0));
+        counties.forEach(item => {
+          const row = document.createElement('li');
+          const heading = document.createElement('div');
+          heading.className = 'safety-county-row-heading';
+          const name = document.createElement('span');
+          name.textContent = item.county;
+          const count = document.createElement('strong');
+          count.textContent = numberFormat.format(Number(item.count) || 0);
+          heading.append(name, count);
+          const track = document.createElement('span');
+          track.className = 'safety-county-bar-track';
+          const bar = document.createElement('span');
+          bar.className = 'safety-county-bar';
+          bar.style.width = `${Math.max(3, ((Number(item.count) || 0) / maxCountyCount) * 100)}%`;
+          track.appendChild(bar);
+          row.append(heading, track);
+          countyList.appendChild(row);
+        });
+        if (!counties.length) {
+          const emptyRow = document.createElement('li');
+          emptyRow.textContent = 'County-level totals are unavailable right now.';
+          countyList.appendChild(emptyRow);
+        }
+      }
+      if (explorerLive) {
+        const fetchedAt = new Date(latestSafetyData.fetchedAt);
+        const updated = Number.isNaN(fetchedAt.valueOf()) ? 'Live PPB report' : `Updated ${fetchedAt.toLocaleTimeString('en-KE', { timeZone: 'Africa/Nairobi', hour: '2-digit', minute: '2-digit' })} EAT`;
+        explorerLive.classList.remove('is-offline');
+        explorerLive.innerHTML = `<span></span>${updated}`;
+      }
+      if (dateSummary && selectedDateLabel) dateSummary.setAttribute('aria-label', `${selectedDateLabel}. ${dateSummary.textContent}`);
+    };
+
+    reportDate?.addEventListener('change', renderBreakdowns);
 
     const animateValue = (element, target) => {
       const startValue = Number(element.dataset.currentValue || 0);
@@ -129,6 +259,10 @@ import { mountGiftSupport } from './gift-support.js';
         safetyLiveStatus.classList.add('is-offline');
         safetyLiveStatus.innerHTML = '<span></span>Source unavailable';
       }
+      if (explorerLive) {
+        explorerLive.classList.add('is-offline');
+        explorerLive.innerHTML = '<span></span>Source unavailable';
+      }
       safetySourceNote.innerHTML = `Could not retrieve the live report right now. <a href="${sourceUrl}" target="_blank" rel="noopener noreferrer">Open the PPB dashboard</a>`;
       safetyStatsMeta.textContent = 'Live counts unavailable; no estimate is shown.';
     };
@@ -138,6 +272,7 @@ import { mountGiftSupport } from './gift-support.js';
         const response = await fetch(`${apiBase}/api/safety/live`, { cache: 'no-store' });
         if (!response.ok) throw new Error('Live safety data request failed.');
         const data = await response.json();
+        latestSafetyData = data;
         const total = Number(data.totalReportedErrors);
         const yearCount = Number(data.currentYearReportedErrors);
         const priorCount = Number(data.priorYearReportedErrors);
@@ -157,6 +292,7 @@ import { mountGiftSupport } from './gift-support.js';
         document.querySelectorAll('[data-live-year]').forEach(element => {
           element.textContent = String(year);
         });
+        renderBreakdowns();
 
         const change = yearCount - priorCount;
         const comparison = change > 0

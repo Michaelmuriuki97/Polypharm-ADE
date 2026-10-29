@@ -286,6 +286,31 @@
         <small>reports listed for the previous year</small>
       </article>
     </div>
+    <div class="safety-explorer" aria-labelledby="safety-explorer-title">
+      <div class="safety-explorer-heading">
+        <div><span class="section-label">LIVE REPORT EXPLORER</span><h3 id="safety-explorer-title">When and where reports are recorded</h3></div>
+        <span class="safety-explorer-live" id="safety-explorer-live"><span></span>Connecting to PPB</span>
+      </div>
+      <div class="safety-explorer-grid">
+        <article class="safety-explorer-card safety-explorer-location">
+          <div class="safety-date-control">
+            <label for="safety-report-date">Choose a day</label>
+            <input id="safety-report-date" type="date" aria-describedby="safety-date-granularity">
+          </div>
+          <div class="safety-date-summary" id="safety-date-summary" aria-live="polite">Loading published report data…</div>
+          <p class="safety-date-granularity" id="safety-date-granularity">Choose a day to see its month highlighted. PPB publishes monthly totals here, not daily counts.</p>
+          <img class="safety-location-image" src="%BASE_URL%images/safety-counties.svg" alt="Illustration representing medication safety reports across counties" loading="lazy">
+          <h4>Where reports are recorded</h4>
+          <p class="safety-county-context">These are the leading counties across all periods shown by PPB. This summary does not provide county totals for the selected day or month.</p>
+          <ol id="safety-county-list" class="safety-county-list"><li>Waiting for county totals…</li></ol>
+        </article>
+        <article class="safety-explorer-card safety-explorer-chart-card">
+          <div class="safety-chart-heading"><div><h4>Monthly reporting trend</h4><p id="safety-chart-caption">Reports per month</p></div><span class="safety-chart-key"><i></i>Reports <b></b>Trend</span></div>
+          <svg id="safety-monthly-chart" class="safety-monthly-chart" viewBox="0 0 780 270" role="img" aria-label="Monthly medication error reports chart" preserveAspectRatio="xMidYMid meet"></svg>
+          <p class="safety-chart-footnote">Bars show monthly published totals. The curve connects the monthly counts to make changes over the year easier to see.</p>
+        </article>
+      </div>
+    </div>
     <p class="safety-data-caveat">These are reports submitted to PvERS, not a count of every medication error in the population or a population error rate. Figures may change as reports are updated.</p>
     <p class="safety-stats-meta" id="safety-stats-meta">Counts will appear when the live source is available.</p>
   </div>

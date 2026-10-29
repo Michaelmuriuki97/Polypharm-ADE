@@ -105,6 +105,50 @@ def _extract_counts(html: str) -> tuple[int, int, int, int]:
     return total_errors, current_year, current_year_count, prior_year_count
 
 
+def _extract_breakdowns(html: str) -> tuple[list[dict], list[dict]]:
+    parser = _DashboardTables()
+    parser.feed(html)
+
+    month_numbers = {
+        "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
+        "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12,
+    }
+    monthly_reports: list[dict] = []
+    county_reports: list[dict] = []
+
+    for rows in parser.tables:
+        table_text = " ".join(" ".join(row) for row in rows).casefold()
+        if "error" not in table_text or "medication" not in table_text:
+            continue
+
+        if "month" in table_text:
+            for row in rows:
+                if len(row) < 2:
+                    continue
+                match = re.fullmatch(r"([A-Za-z]{3})\s+(20\d{2})", row[0].strip())
+                count = _number_from_row(row)
+                if match and count is not None:
+                    month = month_numbers.get(match.group(1).casefold())
+                    if month:
+                        monthly_reports.append({
+                            "year": int(match.group(2)),
+                            "month": month,
+                            "count": count,
+                        })
+
+        if "county" in table_text and ("geographical" in table_text or "county" in table_text):
+            for row in rows:
+                if len(row) < 2 or row[0].strip().casefold() in {"county", "total"}:
+                    continue
+                count = _number_from_row(row)
+                if count is not None and row[0].strip():
+                    county_reports.append({"county": row[0].strip(), "count": count})
+
+    monthly_reports.sort(key=lambda item: (item["year"], item["month"]))
+    county_reports.sort(key=lambda item: (-item["count"], item["county"].casefold()))
+    return monthly_reports, county_reports
+
+
 async def _fetch_dashboard() -> dict:
     async with httpx.AsyncClient(timeout=12, follow_redirects=True) as client:
         response = await client.get(
@@ -114,11 +158,15 @@ async def _fetch_dashboard() -> dict:
         response.raise_for_status()
 
     total, current_year, current_year_count, prior_year = _extract_counts(response.text)
+    monthly_reports, county_reports = _extract_breakdowns(response.text)
     return {
         "totalReportedErrors": total,
         "currentYear": current_year,
         "currentYearReportedErrors": current_year_count,
         "priorYearReportedErrors": prior_year,
+        "monthlyReports": monthly_reports,
+        "countyReports": county_reports,
+        "reportGranularity": "month",
         "fetchedAt": datetime.now(timezone.utc).isoformat(),
         "source": SOURCE_URL,
     }
