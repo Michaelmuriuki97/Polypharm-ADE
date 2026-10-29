@@ -2011,6 +2011,56 @@ footer {
   fill: currentColor;
 }
 
+.standalone-info {
+  max-width: 1000px;
+  min-height: 100vh;
+  padding-top: 140px;
+}
+
+.info-home-link,
+.info-return a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.info-home-link {
+  color: var(--white);
+}
+
+.info-home-link:hover,
+.info-home-link:focus-visible,
+.info-return a:hover,
+.info-return a:focus-visible {
+  color: var(--accent);
+}
+
+.info-panel {
+  padding: 30px;
+}
+
+.info-panel p + p {
+  margin-top: 18px;
+}
+
+.info-panel h2 {
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+.info-profile {
+  margin-top: 22px;
+}
+
+.info-intro {
+  margin: -22px 0 30px;
+}
+
+.info-return {
+  margin-top: 34px;
+}
+
 #quicklinks {
   scroll-margin-top: 90px;
 }
