@@ -73,8 +73,16 @@ export const authApi = {
 };
 
 export const clinicalApi = {
+  health: () => request('/api/clinical/health'),
+
   analyze: payload =>
     request('/api/clinical/analyze', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  askAssistant: payload =>
+    request('/api/clinical/assistant', {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
