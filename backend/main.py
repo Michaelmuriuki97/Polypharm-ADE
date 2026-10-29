@@ -11,10 +11,12 @@ if __package__:
     from . import config  # Loads backend/.env before auth reads settings.
     from .auth import router as auth_router, init_auth_db
     from .clinical_analysis import router as clinical_router
+    from .live_safety import router as live_safety_router
 else:
     import config  # Loads .env from the backend folder.
     from auth import router as auth_router, init_auth_db
     from clinical_analysis import router as clinical_router
+    from live_safety import router as live_safety_router
 
 
 @asynccontextmanager
@@ -55,6 +57,7 @@ app.add_middleware(
 
 app.include_router(auth_router)
 app.include_router(clinical_router)
+app.include_router(live_safety_router)
 
 
 @app.get("/api/health")

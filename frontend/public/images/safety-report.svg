@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 420" role="img" aria-labelledby="title desc">
+  <title id="title">Medication safety report</title>
+  <desc id="desc">A report card with a medicine capsule and a safety check.</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ede9fe"/><stop offset="1" stop-color="#dbeafe"/></linearGradient><linearGradient id="pill" x1="0" x2="1"><stop stop-color="#5b38bd"/><stop offset=".5" stop-color="#5b38bd"/><stop offset=".5" stop-color="#43bfd0"/><stop offset="1" stop-color="#43bfd0"/></linearGradient></defs>
+  <rect width="360" height="420" rx="28" fill="url(#bg)"/>
+  <circle cx="278" cy="82" r="39" fill="#fff" opacity=".55"/><circle cx="67" cy="340" r="54" fill="#fff" opacity=".4"/>
+  <rect x="83" y="78" width="194" height="258" rx="20" fill="#fff" stroke="#c4b5fd" stroke-width="4"/>
+  <path d="M119 119h121M119 143h89" stroke="#b7a8e4" stroke-width="9" stroke-linecap="round"/>
+  <rect x="119" y="185" width="122" height="54" rx="27" fill="url(#pill)" transform="rotate(-32 180 212)"/>
+  <path d="m157 226 14 14 31-35" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="246" cy="298" r="30" fill="#2a0f76"/><path d="m232 298 9 9 19-21" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

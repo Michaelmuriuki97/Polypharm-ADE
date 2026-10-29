@@ -82,6 +82,8 @@
     <nav id="nav-menu">
       <a href="#home" class="nav-link active">Home</a>
       <a href="#technology" class="nav-link">Technology</a>
+      <a href="#safety-updates" class="nav-link">Safety Updates</a>
+      <a href="#safety-statistics" class="nav-link">Live Reports</a>
       <a href="#faq" class="nav-link">FAQs</a>
       <a href="#quicklinks" class="nav-link">Quicklinks</a>
       <a href="%BASE_URL%clinical-app.html" class="nav-link">Clinical App</a>
@@ -169,6 +171,28 @@
   </div>
 </section>
 
+<section id="safety-updates" class="safety-updates-section" aria-labelledby="safety-updates-title">
+  <div class="safety-updates-inner">
+    <div class="safety-updates-heading">
+      <div>
+        <span class="section-label">LIVE FROM KENYA'S PUBLIC SAFETY DASHBOARD</span>
+        <h2 id="safety-updates-title">Medication Safety Updates</h2>
+        <p>Recent reporting snapshots and medication-safety context from the Pharmacy and Poisons Board.</p>
+      </div>
+      <span class="live-indicator" id="safety-live-status"><span></span>Live data</span>
+    </div>
+    <div class="safety-news-window" aria-label="Sliding medication safety updates">
+      <div id="safety-news-track" class="safety-news-track" aria-live="polite">
+        <article class="safety-news-card">
+          <img src="%BASE_URL%images/safety-report.svg" alt="Illustration of a medication safety report">
+          <div><span class="news-card-label">Loading live report</span><h3>Checking the PPB dashboard</h3><p>Fetching the latest publicly reported medication-error figures.</p></div>
+        </article>
+      </div>
+    </div>
+    <p class="safety-source-note" id="safety-source-note">Loading the latest public report. <a href="https://pv.pharmacyboardkenya.org/reports/medications_summary" target="_blank" rel="noopener noreferrer">Open the PPB dashboard</a></p>
+  </div>
+</section>
+
 <section id="technology" class="technology-section reveal">
   <div class="technology-content">
     <span class="section-label">INTELLIGENT HEALTHCARE</span>
@@ -208,6 +232,33 @@
         </p>
       </div>
     </div>
+  </div>
+</section>
+
+<section id="safety-statistics" class="safety-statistics-section" aria-labelledby="safety-statistics-title">
+  <div class="safety-statistics-inner">
+    <span class="section-label">REPORTED SAFETY DATA</span>
+    <h2 id="safety-statistics-title">Medication Error Reports in Kenya</h2>
+    <p class="safety-statistics-intro">Figures update from the Pharmacy and Poisons Board's public PvERS dashboard.</p>
+    <div class="safety-stat-spheres">
+      <article class="safety-stat-sphere">
+        <span class="safety-stat-label">Reports recorded</span>
+        <strong data-live-count="totalReportedErrors">—</strong>
+        <small>total medication-error reports shown by the dashboard</small>
+      </article>
+      <article class="safety-stat-sphere safety-stat-sphere-alt">
+        <span class="safety-stat-label"><span data-live-year>Current year</span> reports</span>
+        <strong data-live-count="currentYearReportedErrors">—</strong>
+        <small>reports listed for the current year</small>
+      </article>
+      <article class="safety-stat-sphere safety-stat-sphere-soft">
+        <span class="safety-stat-label">Previous year</span>
+        <strong data-live-count="priorYearReportedErrors">—</strong>
+        <small>reports listed for the previous year</small>
+      </article>
+    </div>
+    <p class="safety-data-caveat">These are reports submitted to PvERS, not a count of every medication error in the population or a population error rate. Figures may change as reports are updated.</p>
+    <p class="safety-stats-meta" id="safety-stats-meta">Counts will appear when the live source is available.</p>
   </div>
 </section>
 
@@ -277,6 +328,8 @@
       <a href="%BASE_URL%objectives.html" target="_blank" rel="noopener noreferrer">Study Objectives</a>
       <a href="%BASE_URL%methodology.html" target="_blank" rel="noopener noreferrer">Methodology</a>
       <a href="#technology">Technology</a>
+      <a href="#safety-updates">Safety Updates</a>
+      <a href="#safety-statistics">Live Reports</a>
       <a href="#faq">FAQs</a>
       <a href="%BASE_URL%clinical-app.html">Clinical App</a>
       <a href="%BASE_URL%contact.html" target="_blank" rel="noopener noreferrer">Contact the Team</a>

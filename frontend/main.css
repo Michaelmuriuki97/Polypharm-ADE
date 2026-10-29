@@ -2414,3 +2414,269 @@ footer span {
     transition: none;
   }
 }
+
+.safety-updates-section {
+  padding: 76px 25px 82px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f8fafc 0%, #eef4ff 55%, #f8fafc 100%);
+}
+
+.safety-updates-inner,
+.safety-statistics-inner {
+  width: min(1150px, 100%);
+  margin: 0 auto;
+}
+
+.safety-updates-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 25px;
+}
+
+.safety-updates-heading h2,
+.safety-statistics-inner > h2 {
+  margin: 5px 0 8px;
+  color: var(--primary-dark);
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+}
+
+.safety-updates-heading p,
+.safety-statistics-intro {
+  color: var(--secondary);
+}
+
+.live-indicator {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  color: #166534;
+  background: #dcfce7;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.live-indicator span {
+  width: 8px;
+  height: 8px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(34,197,94,0.15);
+}
+
+.live-indicator.is-offline {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+.live-indicator.is-offline span {
+  background: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239,68,68,0.15);
+}
+
+.safety-news-window {
+  overflow: hidden;
+  padding: 8px 0 18px;
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+}
+
+.safety-news-track {
+  display: flex;
+  width: max-content;
+  animation: safety-news-slide 42s linear infinite;
+}
+
+.safety-news-set {
+  display: flex;
+  gap: 20px;
+  padding-right: 20px;
+}
+
+.safety-news-window:hover .safety-news-track,
+.safety-news-window:focus-within .safety-news-track {
+  animation-play-state: paused;
+}
+
+.safety-news-card {
+  display: flex;
+  width: min(420px, calc(100vw - 64px));
+  min-height: 170px;
+  overflow: hidden;
+  color: var(--secondary);
+  background: var(--white);
+  border: 1px solid rgba(42,15,118,0.12);
+  border-radius: 22px;
+  box-shadow: 0 15px 40px rgba(42,15,118,0.09);
+  text-decoration: none;
+}
+
+.safety-news-card img {
+  width: 142px;
+  flex: 0 0 142px;
+  object-fit: cover;
+  background: #e8e2ff;
+}
+
+.safety-news-card > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 22px;
+}
+
+.safety-news-card h3 {
+  margin: 5px 0 7px;
+  color: var(--primary);
+  font-size: 1.08rem;
+  line-height: 1.35;
+}
+
+.safety-news-card p {
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.news-card-label {
+  color: #79531a;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.safety-source-note,
+.safety-stats-meta {
+  color: #526078;
+  font-size: 0.82rem;
+}
+
+.safety-source-note a {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.safety-statistics-section {
+  padding: 90px 25px 100px;
+  text-align: center;
+  background: radial-gradient(circle at 50% 20%, rgba(85,53,184,0.1), transparent 45%), #fff;
+}
+
+.safety-stat-spheres {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  margin: 42px auto 30px;
+}
+
+.safety-stat-sphere {
+  display: flex;
+  width: clamp(220px, 25vw, 275px);
+  aspect-ratio: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,0.42);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 24%, #765ce2 0%, #4523a8 42%, #1b0b53 100%);
+  box-shadow: inset -14px -18px 32px rgba(7,2,32,0.23), inset 9px 9px 24px rgba(255,255,255,0.14), 0 24px 52px rgba(42,15,118,0.24);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.safety-stat-sphere:hover {
+  transform: translateY(-7px) scale(1.025);
+  box-shadow: inset -14px -18px 32px rgba(7,2,32,0.23), inset 9px 9px 24px rgba(255,255,255,0.14), 0 32px 60px rgba(42,15,118,0.3);
+}
+
+.safety-stat-sphere-alt {
+  background: radial-gradient(circle at 30% 24%, #56c5d4 0%, #188ba5 43%, #0c3c68 100%);
+}
+
+.safety-stat-sphere-soft {
+  color: var(--primary-dark);
+  background: radial-gradient(circle at 30% 24%, #fff2ca 0%, #f3bf59 47%, #c67a14 100%);
+}
+
+.safety-stat-sphere strong {
+  margin: 5px 0;
+  font-size: clamp(2.6rem, 5vw, 3.7rem);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.safety-stat-label {
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.safety-stat-sphere small {
+  max-width: 175px;
+  font-size: 0.77rem;
+  line-height: 1.4;
+  opacity: 0.86;
+}
+
+.safety-data-caveat {
+  max-width: 790px;
+  margin: 0 auto 12px;
+  color: #526078;
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+@keyframes safety-news-slide {
+  to { transform: translateX(-50%); }
+}
+
+@media (max-width: 650px) {
+  .safety-updates-section,
+  .safety-statistics-section {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .safety-updates-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .safety-news-card {
+    width: min(350px, calc(100vw - 48px));
+    min-height: 150px;
+  }
+
+  .safety-news-card img {
+    width: 110px;
+    flex-basis: 110px;
+  }
+
+  .safety-news-card > div {
+    padding: 16px;
+  }
+
+  .safety-stat-sphere {
+    width: min(250px, 74vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .safety-news-track {
+    animation: none;
+  }
+
+  .safety-news-set[aria-hidden="true"] {
+    display: none;
+  }
+
+  .safety-stat-sphere {
+    transition: none;
+  }
+}
