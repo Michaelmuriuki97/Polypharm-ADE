@@ -352,52 +352,49 @@ import { safetyEducation } from './safety-education.js';
         monthlyChart.replaceChildren();
         const reportsForYear = monthLabels.map((_, index) => monthlyReports.find(report => Number(report.year) === selectedYear && Number(report.month) === index + 1));
         const counts = reportsForYear.map(report => report ? Math.max(0, Number(report.count) || 0) : 0);
-        const maxCount = Math.max(1, ...counts);
-        const left = 48;
-        const right = 770;
-        const top = 24;
-        const baseline = 212;
-        const plotHeight = baseline - top;
-        const slotWidth = (right - left) / 12;
-        const barWidth = 25;
-        const points = [];
+        const total = counts.reduce((sum, count) => sum + count, 0);
+        const centerX = 180;
+        const centerY = 140;
+        const radius = 84;
+        const circumference = 2 * Math.PI * radius;
+        const selectedCount = counts[selectedMonth - 1] || 0;
+        addSvgElement('circle', { cx: centerX, cy: centerY, r: radius, class: 'safety-chart-donut-track' });
 
-        [0, 0.5, 1].forEach(fraction => {
-          const y = baseline - plotHeight * fraction;
-          addSvgElement('line', { x1: left, y1: y, x2: right, y2: y, class: 'safety-chart-gridline' });
-          const label = addSvgElement('text', { x: left - 9, y: y + 4, 'text-anchor': 'end', class: 'safety-chart-axis-label' });
-          label.textContent = numberFormat.format(Math.round(maxCount * fraction));
-        });
-
-        counts.forEach((count, index) => {
-          const centerX = left + slotWidth * index + slotWidth / 2;
-          const barHeight = count ? Math.max(2, (count / maxCount) * plotHeight) : 0;
-          const rect = addSvgElement('rect', {
-            x: centerX - barWidth / 2,
-            y: baseline - barHeight,
-            width: barWidth,
-            height: barHeight,
-            rx: 6,
-            class: index + 1 === selectedMonth ? 'safety-chart-bar is-selected' : 'safety-chart-bar',
+        if (total > 0) {
+          let offset = 0;
+          counts.forEach((count, index) => {
+            if (count <= 0) return;
+            const segmentLength = (count / total) * circumference;
+            const gap = Math.min(3, segmentLength * 0.18);
+            const arcLength = Math.max(0.5, segmentLength - gap);
+            const segment = addSvgElement('circle', {
+              cx: centerX,
+              cy: centerY,
+              r: radius,
+              transform: `rotate(-90 ${centerX} ${centerY})`,
+              'stroke-dasharray': `${arcLength} ${circumference - arcLength}`,
+              'stroke-dashoffset': -offset,
+              stroke: index + 1 === selectedMonth ? '#18a6b7' : (index % 2 ? '#765ce2' : '#5535b8'),
+              class: index + 1 === selectedMonth ? 'safety-chart-donut-segment is-selected' : 'safety-chart-donut-segment',
+            });
+            const tooltip = addSvgElement('title', {}, segment);
+            tooltip.textContent = `${monthLabels[index]} ${selectedYear}: ${numberFormat.format(count)} reports`;
+            offset += segmentLength;
           });
-          const tooltip = addSvgElement('title', {}, rect);
-          tooltip.textContent = `${monthLabels[index]} ${selectedYear}: ${numberFormat.format(count)} reports`;
-          points.push({ x: centerX, y: baseline - (count / maxCount) * plotHeight });
-          const monthLabel = addSvgElement('text', { x: centerX, y: baseline + 22, 'text-anchor': 'middle', class: 'safety-chart-month-label' });
-          monthLabel.textContent = monthLabels[index];
-        });
+        }
 
-        const curve = points.map((point, index) => {
-          if (index === 0) return `M ${point.x} ${point.y}`;
-          const previous = points[index - 1];
-          const beforePrevious = points[Math.max(0, index - 2)];
-          const next = points[Math.min(points.length - 1, index + 1)];
-          const controlOne = { x: previous.x + (point.x - beforePrevious.x) / 6, y: previous.y + (point.y - beforePrevious.y) / 6 };
-          const controlTwo = { x: point.x - (next.x - previous.x) / 6, y: point.y - (next.y - previous.y) / 6 };
-          return `C ${controlOne.x} ${controlOne.y}, ${controlTwo.x} ${controlTwo.y}, ${point.x} ${point.y}`;
-        }).join(' ');
-        addSvgElement('path', { d: curve, class: 'safety-chart-curve' });
-        points.forEach(point => addSvgElement('circle', { cx: point.x, cy: point.y, r: 3.5, class: 'safety-chart-point' }));
+        const selectedDot = addSvgElement('circle', {
+          cx: centerX,
+          cy: 25,
+          r: 5,
+          class: 'safety-chart-month-dot is-selected',
+        });
+        const selectedDotTitle = addSvgElement('title', {}, selectedDot);
+        selectedDotTitle.textContent = `${monthLabels[selectedMonth - 1]} is selected`;
+        const centerValue = addSvgElement('text', { x: centerX, y: centerY - 3, class: 'safety-chart-center-value' });
+        centerValue.textContent = numberFormat.format(selectedCount);
+        const centerLabel = addSvgElement('text', { x: centerX, y: centerY + 20, class: 'safety-chart-center-label' });
+        centerLabel.textContent = total > 0 ? `${monthLabels[selectedMonth - 1]} reports` : 'No reports listed';
         monthlyChart.setAttribute('aria-label', `Monthly medication-error reports for ${selectedYear}. ${counts.map((count, index) => `${monthLabels[index]}: ${count}`).join(', ')}.`);
       }
 

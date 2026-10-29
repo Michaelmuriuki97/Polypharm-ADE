@@ -1962,13 +1962,18 @@ footer {
 
 .faq-list {
   display: grid;
-  gap: 14px;
+  gap: 0;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
+.faq-section { background: #fff; }
+
 .faq-item {
-  padding: 20px 24px;
-  background: var(--white);
-  border: 1px solid rgba(42,15,118,0.12);
+  padding: 18px 0;
+  background: #fff;
+  border: 0;
+  border-bottom: 1px solid #e8eaf1;
 }
 
 .faq-item summary {
@@ -1976,6 +1981,7 @@ footer {
   cursor: pointer;
   font-weight: 600;
   line-height: 1.5;
+  list-style-position: outside;
 }
 
 .faq-item summary::marker {
@@ -2691,14 +2697,15 @@ footer span {
 .safety-chart-key { display: flex; align-items: center; gap: 6px; color: #526078; font-size: .68rem; white-space: nowrap; }
 .safety-chart-key i { width: 10px; height: 10px; border-radius: 3px; background: #5535b8; }
 .safety-chart-key b { width: 16px; height: 3px; margin-left: 5px; border-radius: 2px; background: #18a6b7; }
-.safety-monthly-chart { display: block; width: 100%; min-width: 560px; overflow: visible; }
-.safety-explorer-chart-card { overflow-x: auto; }
-.safety-chart-gridline { stroke: #e8eaf1; stroke-width: 1; }
-.safety-chart-axis-label,.safety-chart-month-label { fill: #748095; font-family: inherit; font-size: 11px; }
-.safety-chart-bar { fill: #765ce2; opacity: .78; transition: fill .2s ease, opacity .2s ease; }
-.safety-chart-bar.is-selected { fill: #29b9c3; opacity: 1; }
-.safety-chart-curve { fill: none; stroke: #168f9f; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-.safety-chart-point { fill: #fff; stroke: #168f9f; stroke-width: 2.5; }
+.safety-monthly-chart { display: block; width: min(100%, 360px); height: auto; margin: 12px auto; overflow: visible; }
+.safety-explorer-chart-card { overflow: hidden; }
+.safety-chart-donut-track { fill: none; stroke: #eeeaf8; stroke-width: 24; }
+.safety-chart-donut-segment { fill: none; stroke-width: 24; stroke-linecap: round; transition: opacity .2s ease, stroke-width .2s ease; }
+.safety-chart-donut-segment.is-selected { stroke-width: 29; }
+.safety-chart-center-value { fill: #2a0f76; font-family: inherit; font-size: 27px; font-weight: 800; text-anchor: middle; }
+.safety-chart-center-label { fill: #64748b; font-family: inherit; font-size: 12px; text-anchor: middle; }
+.safety-chart-month-dot { fill: #fff; stroke: #5535b8; stroke-width: 2; }
+.safety-chart-month-dot.is-selected { fill: #18a6b7; stroke: #18a6b7; }
 .safety-chart-footnote { margin: 2px 0 0; color: #64748b; font-size: .74rem; line-height: 1.5; }
 
 @media (max-width: 760px) {
@@ -2713,7 +2720,7 @@ footer span {
   .safety-date-actions input { max-width: 100%; width: 100%; flex-basis: 100%; }
   .safety-location-image { width: 72px; height: 84px; }
   .safety-chart-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
-  .safety-monthly-chart { min-width: 520px; }
+  .safety-monthly-chart { width: min(100%, 320px); }
 }
 
 @media (max-width: 700px) {
