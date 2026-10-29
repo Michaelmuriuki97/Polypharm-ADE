@@ -18,6 +18,7 @@ export default defineConfig({
         about: resolve(frontendDir, 'about.html'),
         objectives: resolve(frontendDir, 'objectives.html'),
         methodology: resolve(frontendDir, 'methodology.html'),
+        evidence: resolve(frontendDir, 'evidence.html'),
         contact: resolve(frontendDir, 'contact.html'),
       },
     },
