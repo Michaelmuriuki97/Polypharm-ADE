@@ -1957,10 +1957,12 @@ footer {
 
 .faq-item {
   padding: 20px 24px;
+  background: var(--white);
+  border: 1px solid rgba(42,15,118,0.12);
 }
 
 .faq-item summary {
-  color: var(--white);
+  color: var(--primary-dark);
   cursor: pointer;
   font-weight: 600;
   line-height: 1.5;
@@ -1972,8 +1974,41 @@ footer {
 
 .faq-item p {
   margin: 14px 0 0;
-  color: rgba(255,255,255,0.78);
+  color: var(--secondary);
   line-height: 1.7;
+}
+
+.footer-socials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.footer-socials a {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,0.28);
+  border-radius: 50%;
+  transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.footer-socials a:hover,
+.footer-socials a:focus-visible {
+  color: var(--primary-dark);
+  background: var(--accent);
+  transform: translateY(-3px);
+}
+
+.footer-socials svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
 }
 
 #quicklinks {
