@@ -2393,3 +2393,24 @@ footer span {
   }
 
 }
+
+@media (max-width: 850px) {
+  footer nav.footer-quicklinks {
+    position: static;
+    top: auto;
+    right: auto;
+    width: 100%;
+    padding: 0;
+    flex-direction: row;
+    align-items: stretch;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    backdrop-filter: none;
+    box-shadow: none;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: none;
+  }
+}
