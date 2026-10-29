@@ -1950,6 +1950,16 @@ footer {
   color: var(--accent);
 }
 
+.footer-copyright {
+  width: min(1150px, 100%);
+  margin: 30px auto 0;
+  padding-top: 18px;
+  color: rgba(255,255,255,.65);
+  border-top: 1px solid rgba(255,255,255,.16);
+  font-size: .82rem;
+  text-align: center;
+}
+
 .faq-list {
   display: grid;
   gap: 14px;
