@@ -819,7 +819,13 @@ export default function App() {
   }
 
   if (checking) {
-    return <main className="loading">Loading Polypharm ADE…</main>;
+    return (
+      <main className="loading-screen" role="status" aria-label="Loading sign-in">
+        <img className="loading-brand-icon" src="/images/logo.png" alt="Polypharm ADE" />
+        <span className="loading-spinner" aria-hidden="true" />
+        <span className="visually-hidden">Loading sign-in…</span>
+      </main>
+    );
   }
 
   if (user) {
