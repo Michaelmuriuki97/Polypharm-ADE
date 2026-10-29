@@ -185,7 +185,7 @@
     <div class="public-tool-cards">
       <a class="public-tool-card" href="#safety-centre"><span class="public-tool-icon" aria-hidden="true">✚</span><h3>Medication Safety Centre</h3><p>Plain-language information about labels, side effects, medicine reviews and safe storage.</p><span class="public-tool-action">Explore trusted guidance <b aria-hidden="true">→</b></span></a>
       <a class="public-tool-card" href="#my-medication-list"><span class="public-tool-icon" aria-hidden="true">☷</span><h3>My Medication List</h3><p>Organize a private, printable medicine record to take to an appointment.</p><span class="public-tool-action">Create a list <b aria-hidden="true">→</b></span></a>
-      <a class="public-tool-card" href="#safety-checker"><span class="public-tool-icon" aria-hidden="true">⌕</span><h3>Smart Medication Safety Checker</h3><p>Review a medicine list against the site's limited, transparent prototype rules.</p><span class="public-tool-action">Review medicines <b aria-hidden="true">→</b></span></a>
+      <a class="public-tool-card" href="%BASE_URL%clinical-app.html"><span class="public-tool-icon" aria-hidden="true">⌕</span><h3>Smart Medication Safety Checker</h3><p>Open the Clinical App to review FDA drug labels using its medicine lookup.</p><span class="public-tool-action">Go to the Clinical App <b aria-hidden="true">→</b></span></a>
     </div>
 
     <section id="safety-centre" class="public-tool-panel" aria-labelledby="safety-centre-title" data-language="en">
@@ -223,17 +223,9 @@
     </section>
 
     <section id="safety-checker" class="public-tool-panel" aria-labelledby="safety-checker-title">
-      <div class="public-panel-heading"><div><span class="section-label">LOCAL PROTOTYPE RULE CHECK</span><h3 id="safety-checker-title">Smart Medication Safety Checker</h3><p>Enter medicine names, one per line. Medicine entries stay in this page session and are not sent to the API.</p></div></div>
-      <form id="public-checker-form" class="public-checker-form">
-        <label for="public-checker-medicines">Medicine names</label>
-        <textarea id="public-checker-medicines" rows="5" maxlength="1600" placeholder="For example: warfarin&#10;ibuprofen" required></textarea>
-        <label for="public-checker-age">Age (optional; used only for rules that require older-adult context)</label>
-        <input id="public-checker-age" type="number" min="1" max="120" inputmode="numeric" placeholder="Leave blank if you prefer not to enter it">
-        <button class="public-primary-button" type="submit">Check local rules</button>
-      </form>
-      <div class="public-checker-results" id="public-checker-results" aria-live="polite"></div>
-      <p class="public-safety-note">This research prototype checks only its listed medicine-class rules. It does not verify active ingredients, duplicates, all interactions, renal function, allergies, or full patient context. No alert does not mean a combination is safe. Do not stop or change a medicine based on this tool; discuss concerns with a pharmacist or prescriber. Seek urgent medical assessment for severe or rapidly worsening symptoms.</p>
-      <p class="public-source-line">General reference: <a href="https://medlineplus.gov/medicationerrors.html" target="_blank" rel="noopener noreferrer">MedlinePlus medication safety guidance</a>.</p>
+      <div class="public-panel-heading"><div><span class="section-label">FDA LABEL LOOKUP</span><h3 id="safety-checker-title">Smart Medication Safety Checker</h3><p>Continue to the Clinical App to enter medicines and review the available FDA drug-label information.</p></div></div>
+      <a class="public-primary-button" href="%BASE_URL%clinical-app.html">Open the Clinical App <span aria-hidden="true">→</span></a>
+      <p class="public-safety-note">The Clinical App requires sign-in. Its label lookup displays available FDA information; it is not a complete interaction analysis or a substitute for a pharmacist or prescriber’s review.</p>
     </section>
 
     <section id="report-medicine-problem" class="public-support-section" aria-labelledby="report-problem-title">

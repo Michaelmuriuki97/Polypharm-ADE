@@ -1,5 +1,4 @@
 import { mountGiftSupport } from './gift-support.js';
-import './pharmacy-rules.js';
 import { safetyEducation } from './safety-education.js';
 
 (() => {
@@ -268,83 +267,6 @@ import { safetyEducation } from './safety-education.js';
       inputById(id).addEventListener('change', renderMedicationList);
     });
     renderMedicationList();
-  }
-
-  const publicCheckerForm = document.getElementById('public-checker-form');
-  const publicCheckerResults = document.getElementById('public-checker-results');
-  if (publicCheckerForm && publicCheckerResults) {
-    publicCheckerForm.addEventListener('submit', event => {
-      event.preventDefault();
-      publicCheckerResults.replaceChildren();
-      if (!window.PharmacyRules?.run) {
-        publicCheckerResults.textContent = 'The local rules are unavailable. Please use the FDA label lookup or speak with a pharmacist.';
-        return;
-      }
-      const medicines = [...new Set(document.getElementById('public-checker-medicines').value
-        .split(/[\n,;]+/).map(name => name.trim().replace(/\s+/g, ' ')).filter(Boolean))];
-      if (!medicines.length) {
-        publicCheckerResults.textContent = 'Enter at least one medicine name.';
-        return;
-      }
-      if (medicines.length > 20) {
-        publicCheckerResults.textContent = 'Enter no more than 20 medicine names at a time.';
-        return;
-      }
-      const ageValue = document.getElementById('public-checker-age').value;
-      const age = ageValue ? Number(ageValue) : null;
-      const knownClasses = new Set(Object.values(window.PharmacyRules.classes || {}).flat().map(name => String(name).toLowerCase()));
-      const uncovered = medicines.filter(name => !window.PharmacyRules.getDrugProfile(name).localClasses.length && !knownClasses.has(window.PharmacyRules.normalizeDrugName(name)));
-      const results = window.PharmacyRules.run(medicines, { age });
-      const summary = document.createElement('p');
-      summary.className = 'checker-summary';
-      summary.textContent = results.length
-        ? `${results.length} prototype rule ${results.length === 1 ? 'match' : 'matches'} for the medicines entered.`
-        : 'No included prototype rules matched these entries. This is not evidence that the medicines are safe together.';
-      publicCheckerResults.appendChild(summary);
-      if (uncovered.length) {
-        const message = document.createElement('p');
-        message.className = 'checker-coverage-note';
-        message.textContent = `No medicine class in the local rule list matched: ${uncovered.join(', ')}. These entries were not meaningfully assessed; this does not mean they are unknown medicines.`;
-        publicCheckerResults.appendChild(message);
-      }
-      if (!ageValue) {
-        const contextNote = document.createElement('p');
-        contextNote.className = 'checker-coverage-note';
-        contextNote.textContent = 'No age was entered. Rules that require older-adult context were not applied.';
-        publicCheckerResults.appendChild(contextNote);
-      }
-      if (results.length) {
-        const list = document.createElement('div');
-        list.className = 'checker-alert-list';
-        results.forEach(alert => {
-          const card = document.createElement('article');
-          card.className = `checker-alert checker-alert-${String(alert.severity || 'moderate').toLowerCase()}`;
-          const title = document.createElement('h4');
-          title.textContent = alert.title || alert.category || 'Rule match';
-          const severity = document.createElement('span');
-          severity.className = 'checker-severity';
-          severity.textContent = `${alert.severity || 'Review'} · prototype rule`;
-          card.append(title, severity);
-          const medicinesLine = document.createElement('p');
-          medicinesLine.textContent = `Medicines: ${(alert.drugs || []).join(', ') || 'See rule details'}`;
-          card.appendChild(medicinesLine);
-          [['Why to review', alert.mechanism], ['Potential concern', alert.clinicalEffect], ['Suggested discussion', alert.action], ['Rule source label', alert.source]].forEach(([label, value]) => {
-            if (!value) return;
-            const row = document.createElement('p');
-            const strong = document.createElement('strong');
-            strong.textContent = `${label}: `;
-            row.append(strong, document.createTextNode(value));
-            card.appendChild(row);
-          });
-          list.appendChild(card);
-        });
-        publicCheckerResults.appendChild(list);
-      }
-      const caution = document.createElement('p');
-      caution.className = 'checker-coverage-note';
-      caution.textContent = 'These locally stored rules are a research prototype, not a complete medicine-interaction service. Ask a pharmacist or prescriber to review any concern.';
-      publicCheckerResults.appendChild(caution);
-    });
   }
 
   const items = document.querySelectorAll('.reveal');

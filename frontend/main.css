@@ -3094,20 +3094,6 @@ footer span {
 .medication-entry-list p,.medication-print-summary p { margin: 5px 0; color: #374151; font-size: .85rem; line-height: 1.5; overflow-wrap: anywhere; }
 .medication-list-actions { padding-top: 10px; border-top: 1px solid rgba(19,6,56,.1); }
 .public-safety-note { margin: 16px 0 0; padding: 12px 14px; color: #445168; border-left: 3px solid #f59e0b; border-radius: 7px; background: #fff9e9; font-size: .79rem; line-height: 1.6; }
-.public-checker-form { display: grid; max-width: 700px; gap: 8px; }
-.public-checker-form textarea { resize: vertical; }
-.public-checker-form input { max-width: 250px; }
-.public-checker-form .public-primary-button { justify-self: start; margin-top: 8px; }
-.public-checker-results { margin-top: 20px; }
-.checker-summary { color: #130638; font-weight: 800; }
-.checker-coverage-note { padding: 11px 13px; color: #4b5563; border-radius: 9px; background: #f1f3f8; font-size: .8rem; line-height: 1.6; overflow-wrap: anywhere; }
-.checker-alert-list { display: grid; gap: 11px; }
-.checker-alert { padding: 16px; border: 1px solid #e9b949; border-left: 4px solid #f59e0b; border-radius: 12px; background: #fffdf5; }
-.checker-alert-high,.checker-alert-critical { border-color: #ed9aa1; border-left-color: #d83a52; background: #fff9fa; }
-.checker-alert-low { border-color: #86d5b1; border-left-color: #14885c; background: #f6fff9; }
-.checker-alert h4 { display: inline; margin: 0 10px 0 0; color: #130638; }
-.checker-severity { display: inline-block; margin: 6px 0; padding: 3px 8px; color: #553d08; border-radius: 999px; background: #fff0c2; font-size: .68rem; font-weight: 800; }
-.checker-alert p { margin: 8px 0 0; color: #374151; font-size: .83rem; line-height: 1.55; }
 .public-support-section { scroll-margin-top: 24px; margin: 20px 0; padding: clamp(22px,4vw,34px); color: #f5f3ff; border: 1px solid rgba(255,255,255,.17); border-radius: 20px; background: linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.035)); }
 .public-support-section h3 { color: #fff; }
 .public-support-section > p { max-width: 850px; color: #d2cee4; line-height: 1.7; }
