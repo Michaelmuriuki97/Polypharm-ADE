@@ -7,7 +7,7 @@ export function mountGiftSupport() {
 
   const widget = document.createElement('aside');
   widget.id = giftWidgetId;
-  widget.className = 'gift-support-widget';
+  widget.className = `gift-support-widget ${document.getElementById('root') ? 'is-clinical' : 'is-homepage'}`;
   widget.setAttribute('aria-label', 'Support Polypharm ADE');
   widget.innerHTML = `
     <div class="gift-support-popover" id="gift-support-message" role="region" aria-label="Appreciation message" hidden>
