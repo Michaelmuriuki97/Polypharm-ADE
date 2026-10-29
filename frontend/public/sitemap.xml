@@ -3,7 +3,11 @@
   <url>
     <loc>https://polypharm-ade.vercel.app/</loc>
   </url>
-  <url>
-    <loc>https://polypharm-ade.vercel.app/creator.html</loc>
-  </url>
+  <url><loc>https://polypharm-ade.vercel.app/creator</loc></url>
+  <url><loc>https://polypharm-ade.vercel.app/clinical-app</loc></url>
+  <url><loc>https://polypharm-ade.vercel.app/about</loc></url>
+  <url><loc>https://polypharm-ade.vercel.app/objectives</loc></url>
+  <url><loc>https://polypharm-ade.vercel.app/methodology</loc></url>
+  <url><loc>https://polypharm-ade.vercel.app/evidence</loc></url>
+  <url><loc>https://polypharm-ade.vercel.app/contact</loc></url>
 </urlset>
