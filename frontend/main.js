@@ -45,6 +45,31 @@
     });
   }
 
+  const openFooterDisclosure = id => {
+    const disclosure = document.getElementById(id);
+    if (!(disclosure instanceof HTMLDetailsElement)) return;
+
+    disclosure.open = true;
+    disclosure.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    history.replaceState(null, '', `#${id}`);
+  };
+
+  document.querySelectorAll('[data-footer-disclosure]').forEach(link => {
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      openFooterDisclosure(link.dataset.footerDisclosure);
+    });
+  });
+
+  if (window.location.hash) {
+    const target = document.querySelector(
+      `[data-footer-disclosure][href="${window.location.hash}"]`
+    );
+    if (target instanceof HTMLAnchorElement) {
+      openFooterDisclosure(target.dataset.footerDisclosure);
+    }
+  }
+
   const year = document.getElementById('year');
 
   if (year) {

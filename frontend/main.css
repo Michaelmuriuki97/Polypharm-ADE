@@ -2015,6 +2015,64 @@ footer {
   scroll-margin-top: 90px;
 }
 
+.footer-disclosures {
+  width: min(1150px, 100%);
+  margin: 32px auto 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  text-align: left;
+}
+
+.footer-disclosure {
+  min-width: 0;
+  padding: 18px 22px;
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.06);
+  scroll-margin-top: 24px;
+}
+
+.footer-disclosure summary {
+  color: var(--white);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.footer-disclosure summary::marker {
+  color: var(--accent);
+}
+
+.footer-disclosure-content {
+  padding-top: 16px;
+  color: rgba(255,255,255,0.82);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.footer-disclosure-content p + p {
+  margin-top: 12px;
+}
+
+.footer-disclosure-content h3 {
+  margin-top: 16px;
+  color: var(--white);
+}
+
+.footer-disclosure-content ol {
+  padding-left: 22px;
+}
+
+.footer-disclosure-content li + li {
+  margin-top: 8px;
+}
+
+.footer-disclosure-content a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+
 
 
 .footer-logo img {
@@ -2342,5 +2400,9 @@ footer span {
 
   .faq-item {
     padding: 18px;
+  }
+
+  .footer-disclosures {
+    grid-template-columns: 1fr;
   }
 }
