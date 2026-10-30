@@ -1915,7 +1915,7 @@ footer {
   width: min(1150px, 100%);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 360px);
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 360px) minmax(140px, 190px);
   align-items: center;
   gap: 42px;
   text-align: left;
@@ -1931,14 +1931,23 @@ footer {
   gap: 10px 20px;
 }
 
-.footer-quicklinks h2 {
+.footer-legal {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: start;
+  gap: 10px;
+}
+
+.footer-quicklinks h2,
+.footer-legal h2 {
   grid-column: 1 / -1;
   margin: 0 0 4px;
   color: var(--white);
   font-size: 1.1rem;
 }
 
-.footer-quicklinks a {
+.footer-quicklinks a,
+.footer-legal a {
   color: rgba(255,255,255,0.75);
   font-size: 0.9rem;
   text-decoration: none;
@@ -1946,7 +1955,9 @@ footer {
 }
 
 .footer-quicklinks a:hover,
-.footer-quicklinks a:focus-visible {
+.footer-quicklinks a:focus-visible,
+.footer-legal a:hover,
+.footer-legal a:focus-visible {
   color: var(--accent);
 }
 
@@ -2736,6 +2747,12 @@ footer span {
     text-align: left;
   }
 
+  .footer-legal {
+    width: min(360px, 100%);
+    margin: 0 auto;
+    text-align: left;
+  }
+
   .faq-item {
     padding: 18px;
   }
@@ -2743,7 +2760,8 @@ footer span {
 }
 
 @media (max-width: 850px) {
-  footer nav.footer-quicklinks {
+  footer nav.footer-quicklinks,
+  footer nav.footer-legal {
     position: static;
     top: auto;
     right: auto;

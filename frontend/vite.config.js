@@ -20,6 +20,8 @@ export default defineConfig({
         methodology: resolve(frontendDir, 'methodology.html'),
         evidence: resolve(frontendDir, 'evidence.html'),
         contact: resolve(frontendDir, 'contact.html'),
+        privacyPolicy: resolve(frontendDir, 'privacy-policy.html'),
+        termsOfService: resolve(frontendDir, 'terms-of-service.html'),
       },
     },
   },
