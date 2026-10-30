@@ -3071,6 +3071,16 @@ footer span {
   color: #f8f7ff;
   background: radial-gradient(ellipse at 15% 10%, rgba(85,53,184,.38), transparent 43%), radial-gradient(ellipse at 90% 78%, rgba(24,166,183,.17), transparent 38%), #10052d;
 }
+.website-guide-section { padding: 56px 24px; color: #17213a; background: #f8fafc; }
+.website-guide-inner { width: min(1150px, 100%); margin: 0 auto; }
+.website-guide-heading { max-width: 760px; margin: 0 auto 28px; text-align: center; }
+.website-guide-heading h2 { margin: 6px 0 8px; color: #2a0f76; font-size: clamp(1.6rem, 3vw, 2.2rem); }
+.website-guide-heading p { margin: 0; color: #526078; line-height: 1.65; }
+.website-guide-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; }
+.website-guide-steps article { display: flex; align-items: flex-start; gap: 13px; }
+.website-guide-steps article > span { color: #5535b8; font-size: .82rem; font-weight: 800; letter-spacing: .08em; }
+.website-guide-steps h3 { margin: 0 0 5px; color: #130638; font-size: 1rem; }
+.website-guide-steps p { margin: 0; color: #526078; font-size: .88rem; line-height: 1.6; }
 .public-safety-inner { width: min(1150px, 100%); margin: 0 auto; }
 .public-safety-intro { max-width: 800px; margin: 0 auto 34px; text-align: center; }
 .public-safety-intro h2 { margin: 8px 0 12px; color: #fff; font-size: clamp(2rem, 4.4vw, 3.2rem); }
@@ -3167,6 +3177,7 @@ footer span {
 
 @media(max-width:760px) {
   .public-tool-cards { grid-template-columns: 1fr; }
+  .website-guide-steps { grid-template-columns: 1fr; gap: 18px; }
   .public-tool-card { padding: 20px; }
   .safety-education-list,.medication-context-grid,.caregiver-grid,.evidence-links { grid-template-columns: 1fr; }
 }
