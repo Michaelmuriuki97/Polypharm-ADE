@@ -361,7 +361,7 @@ import { safetyEducation } from './safety-education.js';
           animateCountyBars();
           countyObserver.disconnect();
         }
-      }, { threshold: 0.35 });
+      }, { threshold: 0.05, rootMargin: '0px 0px -8% 0px' });
       countyObserver.observe(countyList.closest('.safety-explorer-card') || countyList);
     }
     const monthlyChart = document.getElementById('safety-monthly-chart');
@@ -383,7 +383,7 @@ import { safetyEducation } from './safety-education.js';
           animateMonthlyChart();
           monthlyChartObserver.disconnect();
         }
-      }, { threshold: 0.3 });
+      }, { threshold: 0.05, rootMargin: '0px 0px -8% 0px' });
       monthlyChartObserver.observe(monthlyChartCard);
     }
     const chartCaption = document.getElementById('safety-chart-caption');
