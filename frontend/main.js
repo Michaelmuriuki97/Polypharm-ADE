@@ -286,6 +286,8 @@ import { safetyEducation } from './safety-education.js';
     const dateSummary = document.getElementById('safety-date-summary');
     const countyList = document.getElementById('safety-county-list');
     const hasIntersectionObserver = 'IntersectionObserver' in window;
+    const isSmallScreen = window.matchMedia('(max-width: 760px)').matches;
+    const chartObserverOptions = { threshold: isSmallScreen ? 0 : 0.01, rootMargin: '0px' };
     let countyVisible = !hasIntersectionObserver;
     let countyHasLeftSinceLoad = !hasIntersectionObserver;
     let countyEnteredAfterLoad = !hasIntersectionObserver;
@@ -365,7 +367,7 @@ import { safetyEducation } from './safety-education.js';
             countyHasLeftSinceLoad = true;
           }
         });
-      }, { threshold: 0.01, rootMargin: '0px 0px -5% 0px' });
+      }, chartObserverOptions);
       countyObserver.observe(countyList.closest('.safety-explorer-card') || countyList);
     }
 
@@ -385,7 +387,7 @@ import { safetyEducation } from './safety-education.js';
             monthlyChartHasLeftSinceLoad = true;
           }
         });
-      }, { threshold: 0.01, rootMargin: '0px 0px -5% 0px' });
+      }, chartObserverOptions);
       monthlyChartObserver.observe(monthlyChartCard);
     }
     const chartCaption = document.getElementById('safety-chart-caption');

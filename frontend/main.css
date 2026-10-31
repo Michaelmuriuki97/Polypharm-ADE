@@ -2693,6 +2693,10 @@ footer span {
   .safety-explorer { padding: 18px; }
   .safety-explorer-grid { grid-template-columns: 1fr; }
   .safety-explorer-card { padding: 16px; }
+  .safety-county-bar-track { height: 9px; }
+  .safety-county-bar { transition-duration: 1.25s; }
+  .safety-chart-donut-segment { stroke-width: 30; transition-duration: 1.25s, .2s, .2s; }
+  .safety-chart-donut-segment.is-selected { stroke-width: 34; }
 }
 
 @media (max-width: 520px) {
