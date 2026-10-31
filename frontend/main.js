@@ -435,6 +435,7 @@ import { safetyEducation } from './safety-education.js';
         countyList.replaceChildren();
         const counties = Array.isArray(latestSafetyData.countyReports) ? latestSafetyData.countyReports.slice(0, 6) : [];
         const maxCountyCount = Math.max(1, ...counties.map(item => Number(item.count) || 0));
+        const countyBars = [];
         counties.forEach(item => {
           const row = document.createElement('li');
           const heading = document.createElement('div');
@@ -448,7 +449,10 @@ import { safetyEducation } from './safety-education.js';
           track.className = 'safety-county-bar-track';
           const bar = document.createElement('span');
           bar.className = 'safety-county-bar';
-          bar.style.width = `${Math.max(3, ((Number(item.count) || 0) / maxCountyCount) * 100)}%`;
+          const fillWidth = Math.max(3, ((Number(item.count) || 0) / maxCountyCount) * 100);
+          bar.style.width = '0%';
+          bar.setAttribute('aria-hidden', 'true');
+          countyBars.push({ bar, fillWidth });
           track.appendChild(bar);
           row.append(heading, track);
           countyList.appendChild(row);
@@ -457,6 +461,13 @@ import { safetyEducation } from './safety-education.js';
           const emptyRow = document.createElement('li');
           emptyRow.textContent = 'County-level totals are unavailable right now.';
           countyList.appendChild(emptyRow);
+        }
+        if (countyBars.length) {
+          requestAnimationFrame(() => countyBars.forEach(({ bar, fillWidth }, index) => {
+            const fill = () => { bar.style.width = `${fillWidth}%`; };
+            if (motionPreference.matches) fill();
+            else window.setTimeout(fill, index * 90);
+          }));
         }
       }
       if (explorerLive) {

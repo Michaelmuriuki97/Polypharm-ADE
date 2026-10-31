@@ -2700,7 +2700,7 @@ footer span {
 .safety-county-row-heading span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .safety-county-row-heading strong { color: var(--primary); font-variant-numeric: tabular-nums; }
 .safety-county-bar-track { display: block; height: 5px; overflow: hidden; border-radius: 99px; background: #ede9f8; }
-.safety-county-bar { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #56c5d4, #5535b8); transition: width .45s ease; }
+.safety-county-bar { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #56c5d4, #5535b8); transition: width .85s cubic-bezier(.2,.75,.25,1); }
 
 .safety-chart-heading { align-items: flex-start; margin-bottom: 6px; }
 .safety-chart-heading h4 { margin: 0; font-size: 1.1rem; }
