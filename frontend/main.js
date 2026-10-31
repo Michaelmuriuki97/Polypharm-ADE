@@ -344,6 +344,26 @@ import { safetyEducation } from './safety-education.js';
     const applyReportDate = document.getElementById('safety-date-apply');
     const dateSummary = document.getElementById('safety-date-summary');
     const countyList = document.getElementById('safety-county-list');
+    let countyListEntered = false;
+    const animateCountyBars = () => {
+      if (!countyList) return;
+      const bars = [...countyList.querySelectorAll('.safety-county-bar[data-fill-width]')];
+      requestAnimationFrame(() => bars.forEach((bar, index) => {
+        const fill = () => { bar.style.width = `${bar.dataset.fillWidth}%`; };
+        if (motionPreference.matches) fill();
+        else window.setTimeout(fill, index * 90);
+      }));
+    };
+    if (countyList && 'IntersectionObserver' in window && !motionPreference.matches) {
+      const countyObserver = new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting)) {
+          countyListEntered = true;
+          animateCountyBars();
+          countyObserver.disconnect();
+        }
+      }, { threshold: 0.35 });
+      countyObserver.observe(countyList.closest('.safety-explorer-card') || countyList);
+    }
     const monthlyChart = document.getElementById('safety-monthly-chart');
     const chartCaption = document.getElementById('safety-chart-caption');
     const explorerLive = document.getElementById('safety-explorer-live');
@@ -451,8 +471,9 @@ import { safetyEducation } from './safety-education.js';
           bar.className = 'safety-county-bar';
           const fillWidth = Math.max(3, ((Number(item.count) || 0) / maxCountyCount) * 100);
           bar.style.width = '0%';
+          bar.dataset.fillWidth = String(fillWidth);
           bar.setAttribute('aria-hidden', 'true');
-          countyBars.push({ bar, fillWidth });
+          countyBars.push(bar);
           track.appendChild(bar);
           row.append(heading, track);
           countyList.appendChild(row);
@@ -462,13 +483,7 @@ import { safetyEducation } from './safety-education.js';
           emptyRow.textContent = 'County-level totals are unavailable right now.';
           countyList.appendChild(emptyRow);
         }
-        if (countyBars.length) {
-          requestAnimationFrame(() => countyBars.forEach(({ bar, fillWidth }, index) => {
-            const fill = () => { bar.style.width = `${fillWidth}%`; };
-            if (motionPreference.matches) fill();
-            else window.setTimeout(fill, index * 90);
-          }));
-        }
+        if (countyBars.length && (countyListEntered || motionPreference.matches || !('IntersectionObserver' in window))) animateCountyBars();
       }
       if (explorerLive) {
         const fetchedAt = new Date(latestSafetyData.fetchedAt);
