@@ -2711,7 +2711,7 @@ footer span {
 .safety-monthly-chart { display: block; width: min(100%, 360px); height: auto; margin: 12px auto; overflow: visible; }
 .safety-explorer-chart-card { overflow: hidden; }
 .safety-chart-donut-track { fill: none; stroke: #eeeaf8; stroke-width: 24; }
-.safety-chart-donut-segment { fill: none; stroke-width: 24; stroke-linecap: round; transition: opacity .2s ease, stroke-width .2s ease; }
+.safety-chart-donut-segment { fill: none; stroke-width: 24; stroke-linecap: round; transition: stroke-dasharray .9s cubic-bezier(.2,.75,.25,1), opacity .2s ease, stroke-width .2s ease; }
 .safety-chart-donut-segment.is-selected { stroke-width: 29; }
 .safety-chart-center-value { fill: #2a0f76; font-family: inherit; font-size: 27px; font-weight: 800; text-anchor: middle; }
 .safety-chart-center-label { fill: #64748b; font-family: inherit; font-size: 12px; text-anchor: middle; }

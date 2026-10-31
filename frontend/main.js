@@ -365,6 +365,27 @@ import { safetyEducation } from './safety-education.js';
       countyObserver.observe(countyList.closest('.safety-explorer-card') || countyList);
     }
     const monthlyChart = document.getElementById('safety-monthly-chart');
+    let monthlyChartEntered = false;
+    const animateMonthlyChart = () => {
+      if (!monthlyChart) return;
+      const segments = [...monthlyChart.querySelectorAll('.safety-chart-donut-segment[data-fill-dasharray]')];
+      requestAnimationFrame(() => segments.forEach((segment, index) => {
+        const fill = () => { segment.style.strokeDasharray = segment.dataset.fillDasharray; };
+        if (motionPreference.matches) fill();
+        else window.setTimeout(fill, index * 70);
+      }));
+    };
+    const monthlyChartCard = monthlyChart?.closest('.safety-explorer-card');
+    if (monthlyChartCard && 'IntersectionObserver' in window && !motionPreference.matches) {
+      const monthlyChartObserver = new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting)) {
+          monthlyChartEntered = true;
+          animateMonthlyChart();
+          monthlyChartObserver.disconnect();
+        }
+      }, { threshold: 0.3 });
+      monthlyChartObserver.observe(monthlyChartCard);
+    }
     const chartCaption = document.getElementById('safety-chart-caption');
     const explorerLive = document.getElementById('safety-explorer-live');
     const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -425,11 +446,12 @@ import { safetyEducation } from './safety-education.js';
               cy: centerY,
               r: radius,
               transform: `rotate(-90 ${centerX} ${centerY})`,
-              'stroke-dasharray': `${arcLength} ${circumference - arcLength}`,
+              'stroke-dasharray': `0 ${circumference}`,
               'stroke-dashoffset': -offset,
               stroke: index + 1 === selectedMonth ? '#18a6b7' : (index % 2 ? '#765ce2' : '#5535b8'),
               class: index + 1 === selectedMonth ? 'safety-chart-donut-segment is-selected' : 'safety-chart-donut-segment',
             });
+            segment.dataset.fillDasharray = `${arcLength} ${circumference - arcLength}`;
             const tooltip = addSvgElement('title', {}, segment);
             tooltip.textContent = `${monthLabels[index]} ${selectedYear}: ${numberFormat.format(count)} reports`;
             offset += segmentLength;
@@ -449,6 +471,7 @@ import { safetyEducation } from './safety-education.js';
         const centerLabel = addSvgElement('text', { x: centerX, y: centerY + 20, class: 'safety-chart-center-label' });
         centerLabel.textContent = total > 0 ? `${monthLabels[selectedMonth - 1]} reports` : 'No reports listed';
         monthlyChart.setAttribute('aria-label', `Monthly medication-error reports for ${selectedYear}. ${counts.map((count, index) => `${monthLabels[index]}: ${count}`).join(', ')}.`);
+        if (total > 0 && (monthlyChartEntered || motionPreference.matches || !('IntersectionObserver' in window))) animateMonthlyChart();
       }
 
       if (countyList) {
