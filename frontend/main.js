@@ -55,39 +55,6 @@ import { safetyEducation } from './safety-education.js';
     year.textContent = new Date().getFullYear();
   }
 
-  const journeyCounters = [...document.querySelectorAll('[data-journey-count]')];
-  if (journeyCounters.length) {
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const animateJourney = () => journeyCounters.forEach((counter, index) => {
-      const target = Number(counter.dataset.journeyCount);
-      if (reduceMotion) {
-        counter.textContent = String(target);
-        return;
-      }
-      window.setTimeout(() => {
-        const startedAt = performance.now();
-        const duration = 520;
-        const frame = now => {
-          const progress = Math.min((now - startedAt) / duration, 1);
-          counter.textContent = String(Math.round(target * (1 - Math.pow(1 - progress, 3))));
-          if (progress < 1) requestAnimationFrame(frame);
-        };
-        requestAnimationFrame(frame);
-      }, index * 180);
-    });
-    if ('IntersectionObserver' in window && !reduceMotion) {
-      const journeyObserver = new IntersectionObserver(entries => {
-        if (entries.some(entry => entry.isIntersecting)) {
-          animateJourney();
-          journeyObserver.disconnect();
-        }
-      }, { threshold: 0.35 });
-      journeyObserver.observe(journeyCounters[0].closest('.safety-journey-section'));
-    } else {
-      animateJourney();
-    }
-  }
-
   const educationList = document.getElementById('safety-education-list');
   const educationSearch = document.getElementById('safety-education-search');
   const educationSearchStatus = document.getElementById('safety-search-status');
@@ -318,7 +285,6 @@ import { safetyEducation } from './safety-education.js';
     const applyReportDate = document.getElementById('safety-date-apply');
     const dateSummary = document.getElementById('safety-date-summary');
     const countyList = document.getElementById('safety-county-list');
-    let countyListEntered = false;
     const animateCountyBars = () => {
       if (!countyList) return;
       const bars = [...countyList.querySelectorAll('.safety-county-bar[data-fill-width]')];
@@ -328,18 +294,7 @@ import { safetyEducation } from './safety-education.js';
         else window.setTimeout(fill, index * 90);
       }));
     };
-    if (countyList && 'IntersectionObserver' in window && !motionPreference.matches) {
-      const countyObserver = new IntersectionObserver(entries => {
-        if (entries.some(entry => entry.isIntersecting)) {
-          countyListEntered = true;
-          animateCountyBars();
-          countyObserver.disconnect();
-        }
-      }, { threshold: 0.05, rootMargin: '0px 0px -8% 0px' });
-      countyObserver.observe(countyList.closest('.safety-explorer-card') || countyList);
-    }
     const monthlyChart = document.getElementById('safety-monthly-chart');
-    let monthlyChartEntered = false;
     const animateMonthlyChart = () => {
       if (!monthlyChart) return;
       const segments = [...monthlyChart.querySelectorAll('.safety-chart-donut-segment[data-fill-dasharray]')];
@@ -349,17 +304,6 @@ import { safetyEducation } from './safety-education.js';
         else window.setTimeout(fill, index * 70);
       }));
     };
-    const monthlyChartCard = monthlyChart?.closest('.safety-explorer-card');
-    if (monthlyChartCard && 'IntersectionObserver' in window && !motionPreference.matches) {
-      const monthlyChartObserver = new IntersectionObserver(entries => {
-        if (entries.some(entry => entry.isIntersecting)) {
-          monthlyChartEntered = true;
-          animateMonthlyChart();
-          monthlyChartObserver.disconnect();
-        }
-      }, { threshold: 0.05, rootMargin: '0px 0px -8% 0px' });
-      monthlyChartObserver.observe(monthlyChartCard);
-    }
     const chartCaption = document.getElementById('safety-chart-caption');
     const explorerLive = document.getElementById('safety-explorer-live');
     const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -445,7 +389,7 @@ import { safetyEducation } from './safety-education.js';
         const centerLabel = addSvgElement('text', { x: centerX, y: centerY + 20, class: 'safety-chart-center-label' });
         centerLabel.textContent = total > 0 ? `${monthLabels[selectedMonth - 1]} reports` : 'No reports listed';
         monthlyChart.setAttribute('aria-label', `Monthly medication-error reports for ${selectedYear}. ${counts.map((count, index) => `${monthLabels[index]}: ${count}`).join(', ')}.`);
-        if (total > 0 && (monthlyChartEntered || motionPreference.matches || !('IntersectionObserver' in window))) animateMonthlyChart();
+        if (total > 0) animateMonthlyChart();
       }
 
       if (countyList) {
@@ -480,7 +424,7 @@ import { safetyEducation } from './safety-education.js';
           emptyRow.textContent = 'County-level totals are unavailable right now.';
           countyList.appendChild(emptyRow);
         }
-        if (countyBars.length && (countyListEntered || motionPreference.matches || !('IntersectionObserver' in window))) animateCountyBars();
+        if (countyBars.length) animateCountyBars();
       }
       if (explorerLive) {
         const fetchedAt = new Date(latestSafetyData.fetchedAt);
