@@ -689,32 +689,85 @@ export default function App() {
 
   if (user) {
     return (
-      <Workspace
-        user={user}
-      />
+      <>
+        <a className="clinical-site-logo" href="/" aria-label="Polypharm ADE home">
+          <img src="/images/logo.png" alt="Polypharm ADE" />
+        </a>
+        <Workspace user={user} />
+        <ClinicalFooter />
+      </>
     );
   }
 
   return (
-    <main className="login-page">
-      <div className="intro">
-        <span className="brand">
-          <Activity /> Polypharm ADE
-        </span>
-        <h1>FDA drug-label lookup</h1>
-        <p>
-          Sign in to retrieve available FDA label information for medicines.
-          The lookup is not an AI review or a complete interaction analysis.
-        </p>
-      </div>
+    <>
+      <a className="clinical-site-logo" href="/" aria-label="Polypharm ADE home">
+        <img src="/images/logo.png" alt="Polypharm ADE" />
+      </a>
+      <main className="login-page">
+        <div className="intro">
+          <span className="brand">
+            <Activity /> Polypharm ADE
+          </span>
+          <h1>FDA drug-label lookup</h1>
+          <p>
+            Sign in to retrieve available FDA label information for medicines.
+            The lookup is not an AI review or a complete interaction analysis.
+          </p>
+        </div>
 
-      <AuthForm
-        mode={mode}
-        onChangeMode={setMode}
-        onSuccess={setUser}
-        resetToken={resetToken}
-        onResetDone={finishPasswordReset}
-      />
-    </main>
+        <AuthForm
+          mode={mode}
+          onChangeMode={setMode}
+          onSuccess={setUser}
+          resetToken={resetToken}
+          onResetDone={finishPasswordReset}
+        />
+      </main>
+      <ClinicalFooter />
+    </>
+  );
+}
+
+function ClinicalFooter() {
+  return (
+    <footer className="clinical-footer">
+      <div className="clinical-footer-inner">
+        <div className="clinical-footer-brand">
+          <a className="clinical-footer-logo" href="/" aria-label="Polypharm ADE home">
+            <img src="/images/logo.png" alt="" />
+          </a>
+          <span>Smart Clinical Support • Medication Safety</span>
+          <div className="clinical-footer-socials" aria-label="Social media links">
+            <a href="https://www.instagram.com/_the._michaels/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">IG</a>
+            <a href="https://x.com/michael_ke97" target="_blank" rel="noopener noreferrer" aria-label="X">X</a>
+            <a href="https://youtube.com/@michael.m.g" target="_blank" rel="noopener noreferrer" aria-label="YouTube">▶</a>
+            <a href="https://www.linkedin.com/in/michael-muriuki-6943442a8/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">in</a>
+            <a href="https://wa.me/254797746839" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">WA</a>
+          </div>
+        </div>
+        <nav className="clinical-footer-links" aria-label="Quicklinks">
+          <h2>Quicklinks</h2>
+          <a href="/">Home</a>
+          <a href="/about" target="_blank" rel="noopener noreferrer">About</a>
+          <a href="/objectives" target="_blank" rel="noopener noreferrer">Study Objectives</a>
+          <a href="/methodology" target="_blank" rel="noopener noreferrer">Methodology</a>
+          <a href="/evidence" target="_blank" rel="noopener noreferrer">Evidence, Privacy &amp; Limits</a>
+          <a href="/#technology">Technology</a>
+          <a href="/#safety-updates">Safety Updates</a>
+          <a href="/#safety-statistics">Live Reports</a>
+          <a href="/#safety-centre">Medication Safety Centre</a>
+          <a href="/#my-medication-list">My Medication List</a>
+          <a href="/#faq">FAQs</a>
+          <a href="/contact" target="_blank" rel="noopener noreferrer">Contact the Team</a>
+        </nav>
+        <nav className="clinical-footer-links clinical-footer-legal" aria-label="Legal">
+          <h2>Legal</h2>
+          <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+          <a href="/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+        </nav>
+      </div>
+      <p className="clinical-footer-copyright">© 2026 Polypharm ADE</p>
+    </footer>
   );
 }
