@@ -293,31 +293,13 @@ import { safetyEducation } from './safety-education.js';
     let countyEnteredAfterLoad = !hasIntersectionObserver;
     let countyAnimationPending = false;
     let countyDataReady = false;
-    let countyAnimationRun = 0;
-    let countyAnimationTimers = [];
-    const fillCountyBars = (bars, animate) => {
-      const fill = bar => { bar.style.width = `${bar.dataset.fillWidth}%`; };
-      countyAnimationTimers.forEach(timer => window.clearTimeout(timer));
-      countyAnimationTimers = [];
-      countyAnimationRun += 1;
-      const run = countyAnimationRun;
-      if (!animate || motionPreference.matches) {
-        bars.forEach(fill);
-        return;
-      }
-      bars.forEach(bar => { bar.style.width = '0%'; });
-      requestAnimationFrame(() => bars.forEach((bar, index) => {
-        countyAnimationTimers.push(window.setTimeout(() => {
-          if (run === countyAnimationRun) fill(bar);
-        }, index * 90));
-      }));
-    };
+    const fillCountyBars = bars => bars.forEach(bar => { bar.style.width = `${bar.dataset.fillWidth}%`; });
     const startCountyAnimation = () => {
       if (!countyVisible || !countyAnimationPending || !countyDataReady || !countyList) return;
       const bars = [...countyList.querySelectorAll('.safety-county-bar[data-fill-width]')];
       if (!bars.length) return;
       countyAnimationPending = false;
-      fillCountyBars(bars, true);
+      fillCountyBars(bars);
     };
     const monthlyChart = document.getElementById('safety-monthly-chart');
     let monthlyChartVisible = !hasIntersectionObserver;
@@ -325,31 +307,13 @@ import { safetyEducation } from './safety-education.js';
     let monthlyChartEnteredAfterLoad = !hasIntersectionObserver;
     let monthlyChartAnimationPending = false;
     let monthlyChartDataReady = false;
-    let monthlyChartAnimationRun = 0;
-    let monthlyChartAnimationTimers = [];
-    const fillMonthlySegments = (segments, animate) => {
-      const fill = segment => { segment.style.strokeDasharray = segment.dataset.fillDasharray; };
-      monthlyChartAnimationTimers.forEach(timer => window.clearTimeout(timer));
-      monthlyChartAnimationTimers = [];
-      monthlyChartAnimationRun += 1;
-      const run = monthlyChartAnimationRun;
-      if (!animate || motionPreference.matches) {
-        segments.forEach(fill);
-        return;
-      }
-      segments.forEach(segment => { segment.style.strokeDasharray = segment.dataset.emptyDasharray; });
-      requestAnimationFrame(() => segments.forEach((segment, index) => {
-        monthlyChartAnimationTimers.push(window.setTimeout(() => {
-          if (run === monthlyChartAnimationRun) fill(segment);
-        }, index * 70));
-      }));
-    };
+    const fillMonthlySegments = segments => segments.forEach(segment => { segment.style.strokeDasharray = segment.dataset.fillDasharray; });
     const startMonthlyChartAnimation = () => {
       if (!monthlyChartVisible || !monthlyChartAnimationPending || !monthlyChartDataReady || !monthlyChart) return;
       const segments = [...monthlyChart.querySelectorAll('.safety-chart-donut-segment[data-fill-dasharray]')];
       if (!segments.length) return;
       monthlyChartAnimationPending = false;
-      fillMonthlySegments(segments, true);
+      fillMonthlySegments(segments);
     };
 
     if (countyList && hasIntersectionObserver) {
@@ -480,7 +444,7 @@ import { safetyEducation } from './safety-education.js';
         if (monthlyChartAnimationPending) {
           startMonthlyChartAnimation();
         } else if (monthlyChartEnteredAfterLoad) {
-          fillMonthlySegments([...monthlyChart.querySelectorAll('.safety-chart-donut-segment[data-fill-dasharray]')], false);
+          fillMonthlySegments([...monthlyChart.querySelectorAll('.safety-chart-donut-segment[data-fill-dasharray]')]);
         } else {
           startMonthlyChartAnimation();
         }
@@ -520,7 +484,7 @@ import { safetyEducation } from './safety-education.js';
         }
         countyDataReady = countyBars.length > 0;
         if (countyAnimationPending) startCountyAnimation();
-        else if (countyEnteredAfterLoad) fillCountyBars(countyBars, false);
+        else if (countyEnteredAfterLoad) fillCountyBars(countyBars);
         else startCountyAnimation();
       }
       if (explorerLive) {
