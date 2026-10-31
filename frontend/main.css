@@ -3016,6 +3016,22 @@ footer span {
   line-height: 1.6;
 }
 
+.safety-journey-section { padding: 76px 24px 82px; color: #17213a; background: linear-gradient(180deg, #fff, #f8f7ff); }
+.safety-journey-inner { width: min(1080px, 100%); margin: 0 auto; text-align: center; }
+.safety-journey-inner > .section-label { color: #5535b8; }
+.safety-journey-inner > h2 { margin: 8px 0; color: #2a0f76; font-size: clamp(1.8rem, 3.5vw, 2.55rem); }
+.safety-journey-intro { margin: 0 auto; max-width: 650px; color: #526078; line-height: 1.65; }
+.safety-journey-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px; margin-top: 46px; text-align: left; }
+.safety-journey-step { position: relative; display: flex; align-items: flex-start; gap: 16px; }
+.safety-journey-step:not(:last-child)::after { position: absolute; top: 31px; left: 78px; right: -18px; height: 2px; background: linear-gradient(90deg, #5535b8, #18a6b7); opacity: .35; content: ""; }
+.safety-journey-number { position: relative; z-index: 1; display: grid; width: 64px; height: 64px; flex: 0 0 64px; place-items: center; color: #5535b8; border: 2px solid #5535b8; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 5px #f3f0ff, 0 8px 22px #2a0f761a; font-size: 1.8rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.safety-journey-number-teal { color: #168f9f; border-color: #168f9f; box-shadow: inset 0 0 0 5px #eaf9fa, 0 8px 22px #168f9f1a; }
+.safety-journey-number-violet { color: #765ce2; border-color: #765ce2; box-shadow: inset 0 0 0 5px #f1efff, 0 8px 22px #765ce21a; }
+.safety-journey-step h3 { margin: 3px 0 6px; color: #130638; font-size: 1.08rem; }
+.safety-journey-step p { margin: 0; color: #526078; font-size: .9rem; line-height: 1.6; }
+@media(max-width:760px) { .safety-journey-steps { grid-template-columns: 1fr; gap: 22px; max-width: 560px; margin-right: auto; margin-left: auto; } .safety-journey-step:not(:last-child)::after { top: 64px; bottom: -22px; left: 31px; right: auto; width: 2px; height: auto; background: linear-gradient(180deg, #5535b8, #18a6b7); } }
+@media(prefers-reduced-motion:reduce) { .safety-journey-number { transition: none; } }
+
 @keyframes safety-news-slide {
   to { transform: translateX(-50%); }
 }

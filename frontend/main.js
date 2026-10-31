@@ -55,6 +55,39 @@ import { safetyEducation } from './safety-education.js';
     year.textContent = new Date().getFullYear();
   }
 
+  const journeyCounters = [...document.querySelectorAll('[data-journey-count]')];
+  if (journeyCounters.length) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const animateJourney = () => journeyCounters.forEach((counter, index) => {
+      const target = Number(counter.dataset.journeyCount);
+      if (reduceMotion) {
+        counter.textContent = String(target);
+        return;
+      }
+      window.setTimeout(() => {
+        const startedAt = performance.now();
+        const duration = 520;
+        const frame = now => {
+          const progress = Math.min((now - startedAt) / duration, 1);
+          counter.textContent = String(Math.round(target * (1 - Math.pow(1 - progress, 3))));
+          if (progress < 1) requestAnimationFrame(frame);
+        };
+        requestAnimationFrame(frame);
+      }, index * 180);
+    });
+    if ('IntersectionObserver' in window && !reduceMotion) {
+      const journeyObserver = new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting)) {
+          animateJourney();
+          journeyObserver.disconnect();
+        }
+      }, { threshold: 0.35 });
+      journeyObserver.observe(journeyCounters[0].closest('.safety-journey-section'));
+    } else {
+      animateJourney();
+    }
+  }
+
   const educationList = document.getElementById('safety-education-list');
   const educationSearch = document.getElementById('safety-education-search');
   const educationSearchStatus = document.getElementById('safety-search-status');
