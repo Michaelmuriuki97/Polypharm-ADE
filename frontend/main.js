@@ -302,32 +302,6 @@ import { safetyEducation } from './safety-education.js';
     renderMedicationList();
   }
 
-  const items = document.querySelectorAll('.reveal');
-  const prefersReducedMotion = window.matchMedia(
-    '(prefers-reduced-motion: reduce)'
-  ).matches;
-
-  if ('IntersectionObserver' in window && !prefersReducedMotion) {
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.12,
-        rootMargin: '0px 0px -25px 0px',
-      }
-    );
-
-    items.forEach(item => observer.observe(item));
-  } else {
-    items.forEach(item => item.classList.add('visible'));
-  }
-
   const newsTrack = document.getElementById('safety-news-track');
   const safetySourceNote = document.getElementById('safety-source-note');
   const safetyStatsMeta = document.getElementById('safety-stats-meta');
