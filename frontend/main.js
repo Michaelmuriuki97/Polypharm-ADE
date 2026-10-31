@@ -285,25 +285,76 @@ import { safetyEducation } from './safety-education.js';
     const applyReportDate = document.getElementById('safety-date-apply');
     const dateSummary = document.getElementById('safety-date-summary');
     const countyList = document.getElementById('safety-county-list');
-    const animateCountyBars = () => {
-      if (!countyList) return;
+    let countyHasEntered = !('IntersectionObserver' in window);
+    let countyDataReady = false;
+    let countyAnimationStarted = false;
+    const fillCountyBars = (bars, animateTwice) => {
+      const fill = bar => { bar.style.width = `${bar.dataset.fillWidth}%`; };
+      if (!animateTwice || motionPreference.matches) {
+        bars.forEach(fill);
+        return;
+      }
+      const runCycle = (resetFirst = false) => requestAnimationFrame(() => {
+        if (resetFirst) bars.forEach(bar => { bar.style.width = '0%'; });
+        requestAnimationFrame(() => bars.forEach((bar, index) => window.setTimeout(() => fill(bar), index * 90)));
+      });
+      runCycle();
+      window.setTimeout(() => runCycle(true), Math.max(1500, bars.length * 90 + 1000));
+    };
+    const startCountyAnimation = () => {
+      if (!countyHasEntered || !countyDataReady || countyAnimationStarted || !countyList) return;
       const bars = [...countyList.querySelectorAll('.safety-county-bar[data-fill-width]')];
-      requestAnimationFrame(() => bars.forEach((bar, index) => {
-        const fill = () => { bar.style.width = `${bar.dataset.fillWidth}%`; };
-        if (motionPreference.matches) fill();
-        else window.setTimeout(fill, index * 90);
-      }));
+      if (!bars.length) return;
+      countyAnimationStarted = true;
+      fillCountyBars(bars, true);
     };
     const monthlyChart = document.getElementById('safety-monthly-chart');
-    const animateMonthlyChart = () => {
-      if (!monthlyChart) return;
-      const segments = [...monthlyChart.querySelectorAll('.safety-chart-donut-segment[data-fill-dasharray]')];
-      requestAnimationFrame(() => segments.forEach((segment, index) => {
-        const fill = () => { segment.style.strokeDasharray = segment.dataset.fillDasharray; };
-        if (motionPreference.matches) fill();
-        else window.setTimeout(fill, index * 70);
-      }));
+    let monthlyChartHasEntered = !('IntersectionObserver' in window);
+    let monthlyChartDataReady = false;
+    let monthlyChartAnimationStarted = false;
+    const fillMonthlySegments = (segments, animateTwice) => {
+      const fill = segment => { segment.style.strokeDasharray = segment.dataset.fillDasharray; };
+      if (!animateTwice || motionPreference.matches) {
+        segments.forEach(fill);
+        return;
+      }
+      const runCycle = (resetFirst = false) => requestAnimationFrame(() => {
+        if (resetFirst) segments.forEach(segment => { segment.style.strokeDasharray = segment.dataset.emptyDasharray; });
+        requestAnimationFrame(() => segments.forEach((segment, index) => window.setTimeout(() => fill(segment), index * 70)));
+      });
+      runCycle();
+      window.setTimeout(() => runCycle(true), Math.max(1900, segments.length * 70 + 1050));
     };
+    const startMonthlyChartAnimation = () => {
+      if (!monthlyChartHasEntered || !monthlyChartDataReady || monthlyChartAnimationStarted || !monthlyChart) return;
+      const segments = [...monthlyChart.querySelectorAll('.safety-chart-donut-segment[data-fill-dasharray]')];
+      if (!segments.length) return;
+      monthlyChartAnimationStarted = true;
+      fillMonthlySegments(segments, true);
+    };
+
+    if (countyList && 'IntersectionObserver' in window && !motionPreference.matches) {
+      const countyObserver = new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting)) {
+          countyHasEntered = true;
+          countyObserver.disconnect();
+          startCountyAnimation();
+        }
+      }, { threshold: 0.01, rootMargin: '0px 0px -5% 0px' });
+      countyObserver.observe(countyList.closest('.safety-explorer-card') || countyList);
+    } else if (motionPreference.matches) countyHasEntered = true;
+
+    const monthlyChartCard = monthlyChart?.closest('.safety-explorer-card');
+    if (monthlyChartCard && 'IntersectionObserver' in window && !motionPreference.matches) {
+      const monthlyChartObserver = new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting)) {
+          monthlyChartHasEntered = true;
+          monthlyChartObserver.disconnect();
+          startMonthlyChartAnimation();
+        }
+      }, { threshold: 0.01, rootMargin: '0px 0px -5% 0px' });
+      monthlyChartObserver.observe(monthlyChartCard);
+    } else if (motionPreference.matches) monthlyChartHasEntered = true;
     const chartCaption = document.getElementById('safety-chart-caption');
     const explorerLive = document.getElementById('safety-explorer-live');
     const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -370,6 +421,7 @@ import { safetyEducation } from './safety-education.js';
               class: index + 1 === selectedMonth ? 'safety-chart-donut-segment is-selected' : 'safety-chart-donut-segment',
             });
             segment.dataset.fillDasharray = `${arcLength} ${circumference - arcLength}`;
+            segment.dataset.emptyDasharray = `0 ${circumference}`;
             const tooltip = addSvgElement('title', {}, segment);
             tooltip.textContent = `${monthLabels[index]} ${selectedYear}: ${numberFormat.format(count)} reports`;
             offset += segmentLength;
@@ -389,7 +441,12 @@ import { safetyEducation } from './safety-education.js';
         const centerLabel = addSvgElement('text', { x: centerX, y: centerY + 20, class: 'safety-chart-center-label' });
         centerLabel.textContent = total > 0 ? `${monthLabels[selectedMonth - 1]} reports` : 'No reports listed';
         monthlyChart.setAttribute('aria-label', `Monthly medication-error reports for ${selectedYear}. ${counts.map((count, index) => `${monthLabels[index]}: ${count}`).join(', ')}.`);
-        if (total > 0) animateMonthlyChart();
+        monthlyChartDataReady = total > 0;
+        if (monthlyChartAnimationStarted) {
+          fillMonthlySegments([...monthlyChart.querySelectorAll('.safety-chart-donut-segment[data-fill-dasharray]')], false);
+        } else {
+          startMonthlyChartAnimation();
+        }
       }
 
       if (countyList) {
@@ -424,7 +481,9 @@ import { safetyEducation } from './safety-education.js';
           emptyRow.textContent = 'County-level totals are unavailable right now.';
           countyList.appendChild(emptyRow);
         }
-        if (countyBars.length) animateCountyBars();
+        countyDataReady = countyBars.length > 0;
+        if (countyAnimationStarted) fillCountyBars(countyBars, false);
+        else startCountyAnimation();
       }
       if (explorerLive) {
         const fetchedAt = new Date(latestSafetyData.fetchedAt);
