@@ -724,7 +724,6 @@ export default function App() {
           onResetDone={finishPasswordReset}
         />
       </main>
-      <ClinicalFooter />
     </>
   );
 }
