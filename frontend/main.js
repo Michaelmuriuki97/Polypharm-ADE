@@ -293,30 +293,22 @@ import { safetyEducation } from './safety-education.js';
     let countyDataReady = false;
     let countyAnimationRun = 0;
     let countyAnimationTimers = [];
-    const fillCountyBars = (bars, animateTwice) => {
+    const fillCountyBars = (bars, animate) => {
       const fill = bar => { bar.style.width = `${bar.dataset.fillWidth}%`; };
       countyAnimationTimers.forEach(timer => window.clearTimeout(timer));
       countyAnimationTimers = [];
       countyAnimationRun += 1;
       const run = countyAnimationRun;
-      if (!animateTwice || motionPreference.matches) {
+      if (!animate || motionPreference.matches) {
         bars.forEach(fill);
         return;
       }
-      const scheduleFill = delay => bars.forEach((bar, index) => {
+      bars.forEach(bar => { bar.style.width = '0%'; });
+      requestAnimationFrame(() => bars.forEach((bar, index) => {
         countyAnimationTimers.push(window.setTimeout(() => {
           if (run === countyAnimationRun) fill(bar);
-        }, delay + index * 90));
-      });
-      bars.forEach(bar => { bar.style.width = '0%'; });
-      requestAnimationFrame(() => scheduleFill(0));
-      countyAnimationTimers.push(window.setTimeout(() => {
-        if (run !== countyAnimationRun) return;
-        bars.forEach(bar => { bar.style.width = '0%'; });
-        requestAnimationFrame(() => {
-          if (run === countyAnimationRun) scheduleFill(0);
-        });
-      }, Math.max(1500, bars.length * 90 + 1000)));
+        }, index * 90));
+      }));
     };
     const startCountyAnimation = () => {
       if (!countyVisible || !countyAnimationPending || !countyDataReady || !countyList) return;
@@ -333,30 +325,22 @@ import { safetyEducation } from './safety-education.js';
     let monthlyChartDataReady = false;
     let monthlyChartAnimationRun = 0;
     let monthlyChartAnimationTimers = [];
-    const fillMonthlySegments = (segments, animateTwice) => {
+    const fillMonthlySegments = (segments, animate) => {
       const fill = segment => { segment.style.strokeDasharray = segment.dataset.fillDasharray; };
       monthlyChartAnimationTimers.forEach(timer => window.clearTimeout(timer));
       monthlyChartAnimationTimers = [];
       monthlyChartAnimationRun += 1;
       const run = monthlyChartAnimationRun;
-      if (!animateTwice || motionPreference.matches) {
+      if (!animate || motionPreference.matches) {
         segments.forEach(fill);
         return;
       }
-      const scheduleFill = delay => segments.forEach((segment, index) => {
+      segments.forEach(segment => { segment.style.strokeDasharray = segment.dataset.emptyDasharray; });
+      requestAnimationFrame(() => segments.forEach((segment, index) => {
         monthlyChartAnimationTimers.push(window.setTimeout(() => {
           if (run === monthlyChartAnimationRun) fill(segment);
-        }, delay + index * 70));
-      });
-      segments.forEach(segment => { segment.style.strokeDasharray = segment.dataset.emptyDasharray; });
-      requestAnimationFrame(() => scheduleFill(0));
-      monthlyChartAnimationTimers.push(window.setTimeout(() => {
-        if (run !== monthlyChartAnimationRun) return;
-        segments.forEach(segment => { segment.style.strokeDasharray = segment.dataset.emptyDasharray; });
-        requestAnimationFrame(() => {
-          if (run === monthlyChartAnimationRun) scheduleFill(0);
-        });
-      }, Math.max(1900, segments.length * 70 + 1050)));
+        }, index * 70));
+      }));
     };
     const startMonthlyChartAnimation = () => {
       if (!monthlyChartVisible || !monthlyChartAnimationPending || !monthlyChartDataReady || !monthlyChart) return;
