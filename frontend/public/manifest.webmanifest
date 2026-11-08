@@ -1,0 +1,22 @@
+{
+  "id": "/",
+  "name": "Polypharm ADE",
+  "short_name": "Polypharm ADE",
+  "description": "Medication safety guidance and FDA drug-label lookup.",
+  "lang": "en",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#0d1228",
+  "theme_color": "#0d1228",
+  "icons": [
+    { "src": "/pwa-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/pwa-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/pwa-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Clinical App", "short_name": "Clinical App", "url": "/clinical-app", "icons": [{ "src": "/pwa-192.png", "sizes": "192x192" }] }
+  ]
+}

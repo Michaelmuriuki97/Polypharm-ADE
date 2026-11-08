@@ -3,6 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/pwa-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Polypharm ADE" />
     <meta name="theme-color" content="#0d1228" />
     <title>Polypharm ADE · Clinical App</title>
 
@@ -94,7 +99,9 @@
         }
       }
     </style>
-  </head>
+
+  <script src="/pwa.js" defer></script>
+</head>
 
   <body>
     <a class="back-home" href="%BASE_URL%">← Back</a>
