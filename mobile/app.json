@@ -4,6 +4,8 @@
     "slug": "polypharm-ade",
     "scheme": "polypharmade",
     "version": "1.0.0",
+    "description": "A medication-safety companion with practical guidance, a private medicine list, and public safety-report updates for Kenya.",
+    "platforms": ["ios", "android"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
