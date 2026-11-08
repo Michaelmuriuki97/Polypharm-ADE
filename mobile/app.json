@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Polypharm ADE",
+    "slug": "polypharm-ade",
+    "scheme": "polypharmade",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.michaelmuriuki.polypharmade",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.michaelmuriuki.polypharmade",
+      "adaptiveIcon": {
+        "backgroundColor": "#0d1228",
+        "foregroundImage": "./assets/icon.png"
+      },
+      "predictiveBackGestureEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-secure-store",
+        { "configureAndroidBackup": true }
+      ]
+    ]
+  }
+}
