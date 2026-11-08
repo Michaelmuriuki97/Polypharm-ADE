@@ -13,7 +13,7 @@ Run `npx expo start` and use a compatible Expo Go client or an EAS development b
 
 ## Build for stores
 
-The project uses Expo Application Services (EAS) cloud builds so both platform builds can be produced without Xcode on this Windows machine. Store builds and submissions still require the owner’s Apple and Google developer accounts, signing credentials, listing assets, privacy declarations, and review approval.
+The project uses Expo Application Services (EAS) cloud builds so both platform builds can be produced without Xcode on this Windows machine. After signing in to the owner’s EAS account, run `npm run build:android` and `npm run build:ios`. Store builds and submissions still require the owner’s Apple and Google developer accounts, signing credentials, listing assets, privacy declarations, and review approval.
 
 The bundle identifier and Android package name are currently `com.michaelmuriuki.polypharmade`; confirm ownership and availability before the first store submission because app identifiers are difficult to change after release.
 
