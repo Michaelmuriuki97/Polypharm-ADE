@@ -15,7 +15,6 @@ from typing import Optional
 
 from fastapi import (
     APIRouter,
-    BackgroundTasks,
     Cookie,
     Depends,
     HTTPException,
@@ -425,7 +424,6 @@ def _create_session(user_id: int, response: Response) -> None:
 def signup(
     payload: SignupPayload,
     response: Response,
-    background_tasks: BackgroundTasks,
 ):
     name = " ".join(payload.full_name.strip().split())
     email = str(payload.email).strip().lower()
@@ -460,12 +458,12 @@ def signup(
         )
 
     _create_session(user_id, response)
-    # SMTP connections may take several seconds or time out. Queue both
-    # notifications so the user receives the signup response immediately.
-    background_tasks.add_task(_send_signup_notifications, name, email, now)
+    # Vercel may suspend background work after returning the HTTP response.
+    # Send these before returning so successful SMTP delivery is not dropped.
+    notification_results = _send_signup_notifications(name, email, now)
     return {
         "user": _public_user(row),
-        "email_notifications": "queued",
+        "email_notifications": notification_results,
     }
 
 
