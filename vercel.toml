@@ -1,3 +1,8 @@
+"$schema" = "https://openapi.vercel.sh/vercel.json"
+# The root config owns routing for both services, so enable clean URLs here.
+# This lets links such as /clinical-app resolve to clinical-app.html.
+cleanUrls = true
+
 [services.web]
 root = "frontend/"
 
