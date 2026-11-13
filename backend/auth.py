@@ -11,6 +11,7 @@ import smtplib
 import ssl
 import time
 from email.message import EmailMessage
+from pathlib import Path
 from typing import Optional
 
 from fastapi import (
@@ -29,6 +30,7 @@ except ImportError:  # Running Uvicorn from inside the backend directory.
     from database import connect_db, integrity_error_types, is_postgres
 
 logger = logging.getLogger(__name__)
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SESSION_COOKIE = "polypharm_session"
 SESSION_TTL_SECONDS = 60 * 60 * 24 * 14
@@ -460,7 +462,16 @@ def signup(
     _create_session(user_id, response)
     # Vercel may suspend background work after returning the HTTP response.
     # Send these before returning so successful SMTP delivery is not dropped.
-    notification_results = _send_signup_notifications(name, email, now)
+    try:
+        notification_results = _send_signup_notifications(name, email, now)
+    except Exception:
+        # Account creation has already committed; a mail-rendering problem
+        # must not turn a successful signup into a 500 response.
+        logger.exception("Signup completed, but email notifications failed.")
+        notification_results = {
+            "welcome_email_sent": False,
+            "founder_email_sent": False,
+        }
     return {
         "user": _public_user(row),
         "email_notifications": notification_results,
