@@ -51,7 +51,7 @@ export const authApi = {
 
   me: () => request('/api/auth/me'),
 
-  logout: () => request('/api/auth/logout', { method: 'POST' }),
+  logout: () => request('/api/auth/logout', { method: 'POST', keepalive: true }),
 
   forgotPassword: payload =>
     request('/api/auth/forgot-password', {

@@ -414,7 +414,6 @@ def _create_session(user_id: int, response: Response) -> None:
     response.set_cookie(
         key=SESSION_COOKIE,
         value=token,
-        max_age=SESSION_TTL_SECONDS,
         httponly=True,
         secure=COOKIE_SECURE,
         samesite="lax",

@@ -646,6 +646,26 @@ export default function App() {
   useEffect(() => mountGiftSupport(), []);
 
   useEffect(() => {
+    const endSessionOnClose = () => {
+      void authApi.logout().catch(() => {});
+    };
+
+    const clearRestoredPage = event => {
+      if (!event.persisted) return;
+      setUser(null);
+      setMode('login');
+      setChecking(false);
+    };
+
+    window.addEventListener('pagehide', endSessionOnClose);
+    window.addEventListener('pageshow', clearRestoredPage);
+    return () => {
+      window.removeEventListener('pagehide', endSessionOnClose);
+      window.removeEventListener('pageshow', clearRestoredPage);
+    };
+  }, []);
+
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get('reset_token');
 
